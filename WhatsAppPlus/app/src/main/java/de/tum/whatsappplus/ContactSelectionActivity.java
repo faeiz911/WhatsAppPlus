@@ -2,10 +2,8 @@ package de.tum.whatsappplus;
 
 import android.content.Intent;
 import android.graphics.PorterDuff;
-import android.provider.SyncStateContract;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -45,7 +43,7 @@ public class ContactSelectionActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         List<Contact> newContacts = new ArrayList<>();
-        String[] selectedContacts = data.getStringArrayExtra("selectedContacts");
+        String[] selectedContacts = data.getStringArrayExtra("de.tum.whatsappplus.SelectedContacts");
         if(requestCode == 1337 && resultCode == RESULT_OK) {
            for(String key : Constants.contacts.keySet()) {
                Contact c = Constants.contacts.get(key);
@@ -61,7 +59,7 @@ public class ContactSelectionActivity extends AppCompatActivity {
 
     public void openContacts(View view) {
         Log.i(TAG, "clicked on " + view.getTag(R.string.tag_chat_id));
-        Intent contactSelection = new Intent(this, ContactSelectionActivity.class);
+        Intent contactSelection = new Intent(this, ContactListActivity.class);
         String[] stringArray = new String[contacts.size()-1];
         for(int i=0; i < contacts.size()-1; i++) {
             stringArray[i] = contacts.get(i).name;

@@ -1,7 +1,7 @@
 package de.tum.whatsappplus;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
@@ -23,6 +23,7 @@ public class ContactListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contact_list);
+        checkBoxList = new ArrayList<>();
         nameArray = getIntent().getStringArrayExtra("nameArray");
 
         table = (TableLayout) findViewById(R.id.contactList);
@@ -48,6 +49,7 @@ public class ContactListActivity extends AppCompatActivity {
 
     }
 
+    // TODO call this from the DONE-button in the ActionBar
     public void selectionDone() {
         List<String> selectedContacts = new ArrayList<>();
         for(CheckBox checkBox : checkBoxList) {
@@ -55,7 +57,7 @@ public class ContactListActivity extends AppCompatActivity {
                 selectedContacts.add((String) checkBox.getTag(R.string.tag_checkbox_id));
             }
         }
-        setResult(RESULT_OK, getIntent().putExtra("selectedContacts", (String[])selectedContacts.toArray()));
+        setResult(RESULT_OK, getIntent().putExtra("de.tum.whatsappplus.SelectedContacts", (String[])selectedContacts.toArray()));
         finish();
     }
 }

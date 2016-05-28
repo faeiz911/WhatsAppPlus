@@ -2,27 +2,26 @@ package de.tum.whatsappplus;
 
 import android.content.Intent;
 import android.graphics.PorterDuff;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 public class GroupCreationActivity extends AppCompatActivity {
 
     private static final String TAG = GroupCreationActivity.class.getName();
     private EditText groupTitle;
-    private String chat_id = getIntent().getStringExtra(Constants.EXTRA_CHAT_ID);
+    private String chat_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_creation);
+
+        chat_id = getIntent().getStringExtra(Constants.EXTRA_CHAT_ID);
 
         TextView description = (TextView) findViewById(R.id.descriptionView);
         description.setText("Please provide group subject and optional group icon...");
