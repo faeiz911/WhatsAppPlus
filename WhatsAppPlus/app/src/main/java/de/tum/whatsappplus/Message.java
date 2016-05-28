@@ -1,7 +1,11 @@
 package de.tum.whatsappplus;
 
-/**
- * Created by michaelkratzer on 28/05/16.
- */
 public class Message {
+    public String author;
+    public String text;
+
+    public Message(String author, String text) {
+        this.author = author;
+        this.text = text;
+    }
 }
