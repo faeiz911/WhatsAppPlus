@@ -4,7 +4,12 @@
     <string name="action_settings">Settings</string>
     <string name="action_newmessage">New message</string>
     <string name="action_next">Next</string>
+    <string name="action_done">Done</string>
     <string name="tag_chat_id">chat_id</string>
+    <string name="tag_checkbox_id">checkbox_id</string>
+    <string name="contact_selection_text">ADD GROUP PARTICIPANTS</string>
+    <string name="contact_selection_hint">Type contact name...</string>
+    <string name="description_add_contact_button">add contacts button</string>
     <string name="action_more">More</string>
     <string name="action_mute">Mute</string>
     <string name="action_media">Media</string>
