@@ -5,4 +5,13 @@
     <string name="action_newmessage">New message</string>
     <string name="action_next">Next</string>
     <string name="tag_chat_id">chat_id</string>
+    <string name="action_more">More</string>
+    <string name="action_mute">Mute</string>
+    <string name="action_media">Media</string>
+    <string name="action_viewcontact">View contact</string>
+    <string name="action_attach">Attach</string>
+    <string name="action_call">Call</string>
+    <string name="action_convert_to_group">Convert to group</string>
+    <string name="tag_chat_owner">chat_owner</string>
+    <string name="tag_selected">selected</string>
 </resources>

@@ -45,6 +45,20 @@ public class ChatListActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+
+        TableLayout table = (TableLayout) findViewById(R.id.chat_list_table);
+        for (int i = 0; i < table.getChildCount(); i++) {
+            View chat1 = table.getChildAt(i);
+            String chatId = (String) chat1.getTag(R.string.tag_chat_id);
+            Contact contact = Constants.contacts.get(chatId);
+            ((TextView) chat1.findViewById(R.id.chat_history_last)).setText(contact.chat.get(contact.chat.size()-1).text);
+            ((TextView) chat1.findViewById(R.id.chat_timestamp)).setText(contact.chat.get(contact.chat.size()-1).timeStamp);
+        }
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_chat_list, menu);

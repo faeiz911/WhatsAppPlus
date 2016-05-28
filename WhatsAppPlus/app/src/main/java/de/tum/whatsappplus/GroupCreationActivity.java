@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -38,8 +39,7 @@ public class GroupCreationActivity extends AppCompatActivity {
         return true;
     }
 
-    public void onNextClick(View view) {
-        Log.i(TAG, "clicked on " + view.getTag(R.string.tag_chat_id));
+    public void onNextClick(MenuItem view) {
         Intent openContactSelection = new Intent(this, ContactSelectionActivity.class);
         openContactSelection.putExtra("groupTitle", groupTitle.getText());
         startActivity(openContactSelection);

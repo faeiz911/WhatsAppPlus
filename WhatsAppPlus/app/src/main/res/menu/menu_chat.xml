@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_call"
+        android:icon="@drawable/ic_call_white_24dp"
+        android:title="@string/action_call"
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/action_attach"
+        android:icon="@drawable/ic_attach_file_white_24dp"
+        android:title="@string/action_attach"
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/action_viewcontact"
+        android:title="@string/action_viewcontact"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/action_media"
+        android:title="@string/action_media"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/action_search"
+        android:title="@string/action_search"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/action_mute"
+        android:title="@string/action_mute"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/action_convert_to_group"
+        android:title="@string/action_convert_to_group"
+        android:onClick="onConvertToGroupClick"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/action_more"
+        android:title="@string/action_more"
+        app:showAsAction="never"/>
+</menu>
