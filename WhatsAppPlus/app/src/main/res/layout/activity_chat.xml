@@ -3,26 +3,24 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="de.tum.whatsappplus.ChatActivity">
 
-    <LinearLayout
-        android:orientation="vertical"
+    <TableLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/chat_list">
+        android:id="@+id/chat_table"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:background="@color/color_chat_background">
 
-    </LinearLayout>
+    </TableLayout>
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/chat_input"
-        android:layout_below="@+id/chat_list"
+        android:layout_below="@+id/chat_table"
         android:layout_alignParentEnd="false"
         android:baselineAligned="false"
         android:measureWithLargestChild="false">

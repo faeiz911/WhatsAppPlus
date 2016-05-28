@@ -15,7 +15,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="de.tum.whatsappplus.ChatActivity"></activity>
+        <activity android:name="de.tum.whatsappplus.ChatActivity"
+            android:parentActivityName=".ChatListActivity">
+        </activity>
     </application>
 
 </manifest>

@@ -1,8 +1,10 @@
 package de.tum.whatsappplus;
 
+import android.content.Intent;
 import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
@@ -11,7 +13,11 @@ import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
+import java.util.logging.Logger;
+
 public class ChatListActivity extends AppCompatActivity {
+
+    private static final String TAG = ChatListActivity.class.getName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +36,7 @@ public class ChatListActivity extends AppCompatActivity {
                 ((TextView) chat1.findViewById(R.id.chat_name)).setText(c.name);
                 ((TextView) chat1.findViewById(R.id.chat_history_last)).setText(c.chat.get(c.chat.size()-1).text);
                 ((TextView) chat1.findViewById(R.id.chat_timestamp)).setText(c.time == null ? "" : c.time);
+                chat1.setTag(R.string.tag_chat_id, c.name);
 
                 table.addView(chat1);
             }
@@ -41,6 +48,13 @@ public class ChatListActivity extends AppCompatActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_chat_list, menu);
         return true;
+    }
+
+    public void onChatSummaryClick(View view) {
+        Log.i(TAG, "clicked on " + view.getTag(R.string.tag_chat_id));
+        Intent openChat = new Intent(this, ChatActivity.class);
+        openChat.putExtra(Constants.EXTRA_CHAT_ID, (String) view.getTag(R.string.tag_chat_id));
+        startActivity(openChat);
     }
 
 }
