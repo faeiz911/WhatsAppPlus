@@ -2,14 +2,15 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="300dp"
     android:layout_height="wrap_content"
-    android:background="@drawable/drawable_chat_item_background">
+    android:background="@drawable/drawable_chat_item_background_self">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Hallo. Mein Name ist Test Item. Wie geht es dir? Mir geht es gut."
         android:id="@+id/chat_message"
-        android:layout_margin="5dp" />
+        android:layout_margin="8dp"
+        android:textColor="@color/color_chatlist_chat_name" />
 
     <TextView
         android:layout_width="wrap_content"

@@ -17,9 +17,15 @@
         </activity>
         <activity
             android:name=".ChatActivity"
-            android:parentActivityName=".ChatListActivity"></activity>
-        <activity android:name=".GroupCreationActivity"></activity>
-        <activity android:name=".ContactSelectionActivity"></activity>
+            android:parentActivityName=".ChatListActivity"
+            android:windowSoftInputMode="stateHidden">
+        </activity>
+        <activity android:name=".GroupCreationActivity"
+            android:parentActivityName=".ChatListActivity">
+        </activity>
+        <activity android:name=".ContactSelectionActivity"
+            android:parentActivityName=".GroupCreationActivity">
+        </activity>
     </application>
 
 </manifest>

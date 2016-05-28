@@ -4,13 +4,13 @@
 
         <item
             android:id="@+id/action_search"
-            android:icon="@drawable/ic_search_black_24dp"
+            android:icon="@drawable/ic_search_white_24dp"
             android:title="@string/action_search"
             app:showAsAction="ifRoom"/>
 
         <item
             android:id="@+id/action_newchat"
-            android:icon="@drawable/ic_comment_black_24dp"
+            android:icon="@drawable/ic_comment_white_24dp"
             android:title="@string/action_newmessage"
             app:showAsAction="ifRoom"/>
 

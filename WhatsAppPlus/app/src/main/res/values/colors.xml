@@ -6,4 +6,7 @@
     <color name="color_divider_chatlist">#e1e1e1</color>
     <color name="color_chat_background">#e0e0e0</color>
     <color name="color_chatlist_chat_name">#000000</color>
+    <color name="color_chat_item_background_self">#e1ffc7</color>
+    <color name="color_chat_item_background_other">#ffffff</color>
+    <color name="color_chat_voice_send_button">#00897b</color>
 </resources>
