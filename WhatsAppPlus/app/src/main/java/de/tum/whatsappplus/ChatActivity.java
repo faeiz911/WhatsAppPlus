@@ -21,12 +21,15 @@ public class ChatActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        String chatId = getIntent().getStringExtra(Constants.EXTRA_CHAT_ID);
+
         TableLayout table = (TableLayout) findViewById(R.id.chat_table);
         if (table != null) {
             Log.i(TAG, "table=" + table);
 
             View chatItem = getLayoutInflater().inflate(R.layout.view_chat_item, table, true);
             ((TextView) chatItem.findViewById(R.id.chat_message)).setText("");
+            ((TextView) chatItem.findViewById(R.id.chat_timestamp)).setText(Constants.contacts.get(chatId));
         }
     }
 }
