@@ -23,8 +23,6 @@ public class GroupCreationActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("New Group");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        getSupportActionBar().a
-
         //ImageButton iconButton = (ImageButton) findViewById(R.id.imageButton);
     }
 }
