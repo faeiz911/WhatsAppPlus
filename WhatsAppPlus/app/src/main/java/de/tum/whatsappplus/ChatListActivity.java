@@ -21,15 +21,15 @@ public class ChatListActivity extends AppCompatActivity {
         TableLayout table = (TableLayout) findViewById(R.id.chat_list_table);
         if (table != null) {
             table.setShowDividers(LinearLayout.SHOW_DIVIDER_MIDDLE);
-
-            for (Contact c : Constants.contacts) {
+            for (String key : Constants.contacts.keySet()) {
+                Contact c = Constants.contacts.get(key);
                 if (c.chat == null) continue;
 
                 View chat1 = getLayoutInflater().inflate(R.layout.view_chat_history_item, table, false);
                 ((ImageView) chat1.findViewById(R.id.chat_icon)).setImageResource(c.imageID);
                 ((TextView) chat1.findViewById(R.id.chat_name)).setText(c.name);
                 ((TextView) chat1.findViewById(R.id.chat_history_last)).setText(c.chat.get(c.chat.size()-1).text);
-                ((TextView) chat1.findViewById(R.id.chat_timestamp)).setText(c.time == null ? "" : c.time);
+                ((TextView) chat1.findViewById(R.id.chat_timestamp)).setText(c.chat.get(c.chat.size()-1).timeStamp);
 
                 table.addView(chat1);
             }
