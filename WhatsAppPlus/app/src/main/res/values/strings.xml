@@ -3,5 +3,6 @@
     <string name="action_search">Search</string>
     <string name="action_settings">Settings</string>
     <string name="action_newmessage">New message</string>
+    <string name="action_next">Next</string>
     <string name="tag_chat_id">chat_id</string>
 </resources>
