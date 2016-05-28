@@ -3,4 +3,6 @@
     <color name="colorPrimary">#075e54</color>
     <color name="colorPrimaryDark">#054d44</color>
     <color name="colorAccent">#ffffff</color>
+    <color name="color_divider_chatlist">#e1e1e1</color>
+    <color name="color_chatlist_chat_name">#000000</color>
 </resources>

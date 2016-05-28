@@ -9,6 +9,12 @@
             app:showAsAction="ifRoom"/>
 
         <item
+            android:id="@+id/action_newchat"
+            android:icon="@drawable/ic_comment_black_24dp"
+            android:title="@string/action_newmessage"
+            app:showAsAction="ifRoom"/>
+
+        <item
             android:id="@+id/action_settings"
             android:title="@string/action_settings"
             app:showAsAction="never"/>
