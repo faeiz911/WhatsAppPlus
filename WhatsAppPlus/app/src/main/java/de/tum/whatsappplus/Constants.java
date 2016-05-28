@@ -8,6 +8,7 @@ import java.util.HashMap;
 public class Constants {
 
     public static final ArrayList<Contact> contacts;
+    public static final String EXTRA_CHAT_ID = "chat_id";
 
     static {
         contacts = new ArrayList<>();
