@@ -9,4 +9,5 @@
     <color name="color_chat_item_background_self">#e1ffc7</color>
     <color name="color_chat_item_background_other">#ffffff</color>
     <color name="color_chat_voice_send_button">#00897b</color>
+    <color name="color_add_button">#00897b</color>
 </resources>
