@@ -13,6 +13,7 @@ import android.widget.TableLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class MessageSelectionActivity extends AppCompatActivity implements View.OnClickListener {
@@ -21,8 +22,6 @@ public class MessageSelectionActivity extends AppCompatActivity implements View.
     private String groupTitle;
     private ArrayList<Contact> contacts;
     private Spinner contactSpinner;
-    private TableLayout messageList;
-
     private TableLayout table;
 
     @Override
@@ -31,19 +30,28 @@ public class MessageSelectionActivity extends AppCompatActivity implements View.
         setContentView(R.layout.activity_message_selection);
         selectedContacts = getIntent().getStringArrayExtra(Constants.EXTRA_CONTACTS_ID);
         groupTitle = getIntent().getStringExtra("groupTitle");
-        messageList = (TableLayout) findViewById(R.id.messageList);
+        table = (TableLayout) findViewById(R.id.messageList);
 
         contactSpinner = (Spinner) findViewById(R.id.contactSpinner);
-        ArrayAdapter<String > adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, selectedContacts);
+        List<String> contacts = new ArrayList<>();
+        for(String contact : selectedContacts) {
+            Contact c = Constants.contacts.get(contact);
+            if(c.chat != null) {
+                contacts.add(c.name);
+            }
+        }
+        ArrayAdapter<String > adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, contacts.toArray(new String[contacts.size()]));
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         contactSpinner.setAdapter(adapter);
         contactSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                messageList.removeAllViews();
+                table.removeAllViews();
                 String contact = (String) ((TextView) selectedItemView).getText();
                 List<Message> messages = Constants.contacts.get(contact).chat;
-
+                for(Message m : messages) {
+                    addNewChatMessage(m);
+                }
             }
 
             @Override
