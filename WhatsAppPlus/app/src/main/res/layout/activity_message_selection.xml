@@ -43,6 +43,7 @@
                 android:layout_marginBottom="10dp"
                 android:layout_marginLeft="70dp"
                 android:layout_marginRight="70dp"
+
                 android:transitionGroup="false" />
         </LinearLayout>
 

@@ -35,6 +35,8 @@ public class MessageSelectionActivity extends AppCompatActivity implements View.
         table = (TableLayout) findViewById(R.id.messageList);
 
         contactSpinner = (Spinner) findViewById(R.id.contactSpinner);
+        contactSpinner.getBackground().setColorFilter(getResources().getColor(android.R.color.white), PorterDuff.Mode.SRC_ATOP);
+
         List<String> contacts = new ArrayList<>();
         for(String contact : selectedContacts) {
             Contact c = Constants.contacts.get(contact);
