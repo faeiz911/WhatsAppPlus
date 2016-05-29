@@ -64,8 +64,8 @@ public class ContactSelectionActivity extends AppCompatActivity {
     public void openContacts(View view) {
         Log.i(TAG, "clicked on " + view.getTag(R.string.tag_chat_id));
         Intent contactSelection = new Intent(this, ContactListActivity.class);
-        String[] stringArray = new String[contacts.size()-1];
-        for(int i=0; i < contacts.size()-1; i++) {
+        String[] stringArray = new String[contacts.size()];
+        for(int i=0; i < contacts.size(); i++) {
             stringArray[i] = contacts.get(i).name;
         }
 
