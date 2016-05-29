@@ -60,23 +60,24 @@ public class ContactSelectionActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        Log.d(TAG, "onActivityResult called with reqc=" + requestCode + " resc=" + resultCode + " data=" + data);
         List<Contact> newContacts = new ArrayList<>();
         String[] selectedContacts = data.getStringArrayExtra("de.tum.whatsappplus.SelectedContacts");
         if(requestCode == 1337 && resultCode == RESULT_OK) {
-           for(String key : Constants.contacts.keySet()) {
-               Contact c = Constants.contacts.get(key);
-               for(String contactName : selectedContacts) {
-                   if(contactName.equals(c.name)) {
-                       newContacts.add(c);
-                   }
-               }
-           }
+            for(String key : Constants.contacts.keySet()) {
+                Contact c = Constants.contacts.get(key);
+                for(String contactName : selectedContacts) {
+                    if(contactName.equals(c.name)) {
+                        newContacts.add(c);
+                    }
+                }
+            }
+            contacts = newContacts;
         }
-        contacts = newContacts;
     }
 
     public void openContacts(View view) {
-        Log.i(TAG, "clicked on " + view.getTag(R.string.tag_chat_id));
+        Log.d(TAG, "clicked on " + view.getTag(R.string.tag_chat_id));
         Intent contactSelection = new Intent(this, ContactListActivity.class);
         String[] stringArray = new String[contacts.size()];
         for(int i=0; i < contacts.size(); i++) {
@@ -99,7 +100,7 @@ public class ContactSelectionActivity extends AppCompatActivity {
     }
 
     public void onNextClick(View view) {
-        Log.i(TAG, "onNextClick in " + ContactSelectionActivity.class.getSimpleName());
+        Log.d(TAG, "onNextClick in " + ContactSelectionActivity.class.getSimpleName());
         Intent messageSelectionIntent = new Intent(this, MessageSelectionActivity.class);
         String[] selectedContacts = new String[contacts.size()];
         for(int i = 0; i < selectedContacts.length; i++) {
