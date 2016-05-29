@@ -12,14 +12,12 @@ import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class MessageSelectionActivity extends AppCompatActivity implements View.OnClickListener {
 
     private String[] selectedContacts;
     private String groupTitle;
-    private ArrayList<Contact> contacts;
     private Spinner contactSpinner;
     private TableLayout messageList;
 
@@ -53,16 +51,6 @@ public class MessageSelectionActivity extends AppCompatActivity implements View.
 
         });
 
-
-        contacts = new ArrayList<>();
-        for(String key : Constants.contacts.keySet()) {
-            Contact c = Constants.contacts.get(key);
-            for(String selected : selectedContacts) {
-                if(c.name.equals(selected)) {
-                    contacts.add(c);
-                }
-            }
-        }
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("New group");
@@ -79,7 +67,7 @@ public class MessageSelectionActivity extends AppCompatActivity implements View.
 
     }
 
-    private void addNewChatMessage(Message message) {
+    private View addNewChatMessage(Message message) {
         View chatItem = getLayoutInflater().inflate(R.layout.view_chat_item, table, false);
         ((TextView) chatItem.findViewById(R.id.chat_message)).setText(message.text);
         ((TextView) chatItem.findViewById(R.id.chat_timestamp)).setText(message.timeStamp);
@@ -107,6 +95,7 @@ public class MessageSelectionActivity extends AppCompatActivity implements View.
         chatMessageContent.setLayoutParams(chatMessageContentLayoutParams);
 
         table.addView(chatItem, chatItemLayoutParams);
+        return chatItem;
     }
 
     @Override
@@ -119,15 +108,16 @@ public class MessageSelectionActivity extends AppCompatActivity implements View.
         Message message = (Message) chatItem.getTag(R.string.tag_chat_message);
         boolean chatItemSelected = message.selected;
         if ("self".equals(message.author)) {
-            selectSelfMessage(!chatItemSelected, messageContent, chatItem);
+            selectSelfMessage(!chatItemSelected, chatItem);
         } else {
-            selectOtherMessage(!chatItemSelected, messageContent, chatItem);
+            selectOtherMessage(!chatItemSelected, chatItem);
         }
 
         message.selected = !message.selected;
     }
 
-    private void selectSelfMessage(boolean toggle, View messageContent, View chatItem) {
+    private void selectSelfMessage(boolean toggle, View chatItem) {
+        View messageContent = chatItem.findViewById(R.id.chat_message_content);
         if (toggle) {
             messageContent.setBackground(getResources().getDrawable(R.drawable.drawable_chat_item_background_self_sel));
             chatItem.setBackgroundColor(getResources().getColor(R.color.color_chat_item_background_sel));
@@ -137,7 +127,8 @@ public class MessageSelectionActivity extends AppCompatActivity implements View.
         }
     }
 
-    private void selectOtherMessage(boolean toggle, View messageContent, View chatItem) {
+    private void selectOtherMessage(boolean toggle, View chatItem) {
+        View messageContent = chatItem.findViewById(R.id.chat_message_content);
         if (toggle) {
             messageContent.setBackground(getResources().getDrawable(R.drawable.drawable_chat_item_background_other_sel));
             chatItem.setBackgroundColor(getResources().getColor(R.color.color_chat_item_background_sel));
