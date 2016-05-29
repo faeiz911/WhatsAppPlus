@@ -1,9 +1,9 @@
 package de.tum.whatsappplus;
 
 import android.content.Intent;
-import android.provider.ContactsContract;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -13,8 +13,6 @@ import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
-import java.util.logging.Logger;
-
 public class ChatListActivity extends AppCompatActivity {
 
     private static final String TAG = ChatListActivity.class.getName();
@@ -23,6 +21,10 @@ public class ChatListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_list);
+
+//        getLayoutInflater().inflate(R.layout.toolbar, (ViewGroup) findViewById(R.id.chat_list_root), true);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         TableLayout table = (TableLayout) findViewById(R.id.chat_list_table);
         if (table != null) {

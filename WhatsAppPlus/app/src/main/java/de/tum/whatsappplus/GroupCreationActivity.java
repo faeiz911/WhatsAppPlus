@@ -4,9 +4,8 @@ import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
+import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -28,19 +27,15 @@ public class GroupCreationActivity extends AppCompatActivity {
 
         groupTitle  = (EditText) findViewById(R.id.groupTitle);
         groupTitle.getBackground().mutate().setColorFilter(getResources().getColor(R.color.color_add_button), PorterDuff.Mode.SRC_ATOP);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("New Group");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         //ImageButton iconButton = (ImageButton) findViewById(R.id.imageButton);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_group_creation, menu);
-        return true;
-    }
-
-    public void onNextClick(MenuItem view) {
+    public void onNextClick(View view) {
         Intent openContactSelection = new Intent(this, ContactSelectionActivity.class);
         openContactSelection.putExtra("groupTitle", groupTitle.getText());
         openContactSelection.putExtra(Constants.EXTRA_CHAT_ID, chat_id);

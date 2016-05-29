@@ -3,8 +3,7 @@
     android:orientation="horizontal" android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:paddingTop="10dp"
-    android:paddingBottom="10dp"
-    android:onClick="onChatSummaryClick">
+    android:paddingBottom="10dp">
 
     <ImageView
         android:layout_width="50dp"

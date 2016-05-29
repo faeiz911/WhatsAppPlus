@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -31,6 +32,9 @@ public class ContactSelectionActivity extends AppCompatActivity {
         Contact fromChat = Constants.contacts.get(getIntent().getStringExtra(Constants.EXTRA_CHAT_ID));
         contacts.add(fromChat);
         groupTitle = getIntent().getStringExtra("groupTitle");
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
     }
 
     @Override
@@ -69,5 +73,8 @@ public class ContactSelectionActivity extends AppCompatActivity {
         startActivityForResult(contactSelection, 1337);
     }
 
+    public void onNextClick(View view) {
+        Log.i(TAG, "onNextClick in " + ContactSelectionActivity.class.getSimpleName());
+    }
 
 }

@@ -1,8 +1,10 @@
 package de.tum.whatsappplus;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -13,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TableLayout;
@@ -34,11 +37,22 @@ public class ChatActivity extends AppCompatActivity implements View.OnLongClickL
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_chat);
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         String chatId = getIntent().getStringExtra(Constants.EXTRA_CHAT_ID);
+
+        setContentView(R.layout.activity_chat);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        ImageView toolbarIcon = (ImageView) toolbar.findViewById(R.id.toolbar_icon);
+        toolbarIcon.setImageDrawable(getResources().getDrawable(Constants.contacts.get(chatId).imageID));
+        TextView toolbarTitle = (TextView) toolbar.findViewById(R.id.toolbar_title);
+        toolbarTitle.setText(chatId);
+        setSupportActionBar(toolbar);
+
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayShowTitleEnabled(false);
+        }
 
         table = (TableLayout) findViewById(R.id.chat_table);
         table.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
@@ -204,4 +218,9 @@ public class ChatActivity extends AppCompatActivity implements View.OnLongClickL
             chatItem.setTag(R.string.tag_selected, false);
         }
     }
+
+    public void onBackButtonClick(View view) {
+        finish();
+    }
+
 }

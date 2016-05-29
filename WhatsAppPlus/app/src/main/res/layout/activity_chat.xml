@@ -10,6 +10,8 @@
     android:columnOrderPreserved="false"
     android:background="@color/color_chat_background">
 
+    <include layout="@layout/toolbar_chat"/>
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -47,6 +49,7 @@
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:layout_marginRight="10dp"
+            android:textColor="@color/color_chat_message_input"
             android:textCursorDrawable="@null"/>
 
         <ImageButton
