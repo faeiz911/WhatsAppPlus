@@ -9,6 +9,7 @@ public class Constants {
 
     public static final Map<String, Contact> contacts;
     public static final String EXTRA_CHAT_ID = "chat_id";
+    public static final String EXTRA_CONTACTS_ID = "contacts";
 
     static {
         contacts = new HashMap<>();

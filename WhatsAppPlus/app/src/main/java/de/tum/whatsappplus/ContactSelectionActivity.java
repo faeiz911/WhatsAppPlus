@@ -100,6 +100,14 @@ public class ContactSelectionActivity extends AppCompatActivity {
 
     public void onNextClick(View view) {
         Log.i(TAG, "onNextClick in " + ContactSelectionActivity.class.getSimpleName());
+        Intent messageSelectionIntent = new Intent(this, MessageSelectionActivity.class);
+        String[] selectedContacts = new String[contacts.size()];
+        for(int i = 0; i < selectedContacts.length; i++) {
+            selectedContacts[i] = contacts.get(i).name;
+        }
+        messageSelectionIntent.putExtra(Constants.EXTRA_CONTACTS_ID, selectedContacts);
+        messageSelectionIntent.putExtra("groupTitle", groupTitle);
+        startActivity(messageSelectionIntent);
     }
 
 }
