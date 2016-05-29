@@ -4,6 +4,7 @@ public class Message {
     public String author;
     public String text;
     public String timeStamp;
+    public boolean selected;
 
     public Message(String author, String text, String timeStamp) {
         this.author = author;

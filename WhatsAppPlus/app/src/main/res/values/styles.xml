@@ -12,13 +12,17 @@
         <item name="colorControlHighlight">@color/color_add_button</item>
 
         <item name="android:textColorPrimary">@color/colorAccent</item>
-        <!--<item name="android:editTextStyle">@style/editTextStyle</item>-->
         <item name="android:editTextColor">@color/color_chat_message_input</item>
         <item name="android:textCursorDrawable">@null</item>
     </style>
 
-    <!--<style name="editTextStyle" parent="@android:style/Widget.EditText">-->
-        <!--<item name="android:textColor">@color/color_chat_message_input</item>-->
-    <!--</style>-->
+    <style name="SelectionToolbar" parent="AppTheme">
+        <item name="colorPrimary">@color/color_toolbar_selection_primary</item>
+        <item name="colorPrimaryDark">@color/color_toolbar_selection_primary_dark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+
+        <item name="colorControlNormal">@color/colorAccent</item>
+        <item name="colorControlHighlight">@color/color_toolbar_selection_highlight</item>
+    </style>
 
 </resources>

@@ -6,6 +6,7 @@ public class Contact {
     public String name;
     public int imageID;
     public ArrayList<Message> chat;
+    public int selectedMessagesAmount;
 
     public Contact(String name, int imageID, ArrayList<Message> chat) {
         this.name = name;

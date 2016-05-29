@@ -20,4 +20,9 @@
     <string name="tag_chat_owner">chat_owner</string>
     <string name="tag_selected">selected</string>
     <string name="tag_remove_contact">remove</string>
+    <string name="action_star">Favorite</string>
+    <string name="action_delete">Delete</string>
+    <string name="action_copy">Copy</string>
+    <string name="action_forward">Forward</string>
+    <string name="tag_chat_message">chat_message</string>
 </resources>

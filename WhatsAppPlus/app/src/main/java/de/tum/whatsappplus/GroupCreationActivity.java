@@ -22,6 +22,13 @@ public class GroupCreationActivity extends AppCompatActivity {
 
         chat_id = getIntent().getStringExtra(Constants.EXTRA_CHAT_ID);
 
+        // test that indeed the correct messages are selected:
+//        List<Message> contactMessages = Constants.contacts.get(chat_id).chat;
+//        for (Message m : contactMessages) {
+//            if (m.selected)
+//                Log.i(TAG, m.text);
+//        }
+
         TextView description = (TextView) findViewById(R.id.descriptionView);
         description.setText("Please provide group subject and optional group icon...");
 

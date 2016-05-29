@@ -1,6 +1,7 @@
 package de.tum.whatsappplus;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -13,6 +14,9 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -28,6 +32,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnLongClickL
     private static final String TAG = ChatActivity.class.getName();
     private static final int MESSAGE_MARGIN_TOP = 5;
 
+    private Toolbar toolbar;
     private EditText chatInputEditText;
     private TableLayout table;
 
@@ -39,14 +44,15 @@ public class ChatActivity extends AppCompatActivity implements View.OnLongClickL
         super.onCreate(savedInstanceState);
 
         String chatId = getIntent().getStringExtra(Constants.EXTRA_CHAT_ID);
+        contact = Constants.contacts.get(chatId);
 
         setContentView(R.layout.activity_chat);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         ImageView toolbarIcon = (ImageView) toolbar.findViewById(R.id.toolbar_icon);
-        toolbarIcon.setImageDrawable(getResources().getDrawable(Constants.contacts.get(chatId).imageID));
+        toolbarIcon.setImageDrawable(getResources().getDrawable(Constants.contacts.get(contact.name).imageID));
         TextView toolbarTitle = (TextView) toolbar.findViewById(R.id.toolbar_title);
-        toolbarTitle.setText(chatId);
+        toolbarTitle.setText(contact.name);
         setSupportActionBar(toolbar);
 
         ActionBar actionBar = getSupportActionBar();
@@ -65,7 +71,6 @@ public class ChatActivity extends AppCompatActivity implements View.OnLongClickL
         });
 
         if (table != null) {
-            contact = Constants.contacts.get(chatId);
             getSupportActionBar().setTitle(contact.name);
             for (Message message : contact.chat) {
                 addNewChatMessage(message);
@@ -119,8 +124,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnLongClickL
             chatMessageContent.setBackground(getResources().getDrawable(R.drawable.drawable_chat_item_background_other));
         }
 
-        chatItem.setTag(R.string.tag_chat_owner, message.author);
-        chatItem.setTag(R.string.tag_selected, false);
+        chatItem.setTag(R.string.tag_chat_message, message);
         chatMessageContent.setOnLongClickListener(this);
         chatMessageContent.setOnClickListener(this);
 
@@ -131,8 +135,13 @@ public class ChatActivity extends AppCompatActivity implements View.OnLongClickL
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        Log.d(TAG, "onCreateOptionsMenu called");
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_chat, menu);
+        if (toolbar.getId() == R.id.toolbar_selectionmode)
+            inflater.inflate(R.menu.menu_chat_selectionmode, menu);
+        else
+            inflater.inflate(R.menu.menu_chat, menu);
+
         return true;
     }
 
@@ -159,6 +168,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnLongClickL
     }
 
     public void onConvertToGroupClick(MenuItem menuItem) {
+        Log.d(TAG, "onConvertToGroupClick with action: " + menuItem.getItemId());
         Intent convertToGroupIntent = new Intent(this, GroupCreationActivity.class);
         convertToGroupIntent.putExtra(Constants.EXTRA_CHAT_ID, contact.name);
         startActivity(convertToGroupIntent);
@@ -183,11 +193,54 @@ public class ChatActivity extends AppCompatActivity implements View.OnLongClickL
 
     private void selectOrDeselectMessage(View messageContent) {
         View chatItem = (View) messageContent.getParent();
-        boolean chatItemSelected = (boolean) chatItem.getTag(R.string.tag_selected);
-        if ("self".equals(chatItem.getTag(R.string.tag_chat_owner))) {
+        Message message = (Message) chatItem.getTag(R.string.tag_chat_message);
+        boolean chatItemSelected = message.selected;
+        if ("self".equals(message.author)) {
             selectSelfMessage(!chatItemSelected, messageContent, chatItem);
         } else {
             selectOtherMessage(!chatItemSelected, messageContent, chatItem);
+        }
+
+        message.selected = !message.selected;
+
+        // change of action bar
+        if (selectedMessages > 0) {
+            // toolbar is different, load it
+            if (toolbar.getId() != R.id.toolbar_selectionmode) {
+                ViewGroup chatRoot = (ViewGroup) findViewById(R.id.chat_root);
+                chatRoot.removeView(toolbar);
+                toolbar = (Toolbar) getLayoutInflater().inflate(R.layout.toolbar_chat_selectionmode, chatRoot, false);
+                chatRoot.addView(toolbar, 0);
+                setSupportActionBar(toolbar);
+                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    Window window = getWindow();
+                    window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                    window.setStatusBarColor(getResources().getColor(R.color.color_toolbar_selection_primary_dark));
+                }
+            }
+            getSupportActionBar().setTitle(Integer.toString(selectedMessages));
+        } else {
+            // toolbar is different, load it
+            if (toolbar.getId() != R.id.toolbar) {
+                ViewGroup chatRoot = (ViewGroup) findViewById(R.id.chat_root);
+                toolbar = (Toolbar) getLayoutInflater().inflate(R.layout.toolbar_chat, chatRoot, false);
+                ImageView toolbarIcon = (ImageView) toolbar.findViewById(R.id.toolbar_icon);
+                toolbarIcon.setImageDrawable(getResources().getDrawable(contact.imageID));
+                TextView toolbarTitle = (TextView) toolbar.findViewById(R.id.toolbar_title);
+                toolbarTitle.setText(contact.name);
+                chatRoot.removeViewAt(0);
+                chatRoot.addView(toolbar, 0);
+                setSupportActionBar(toolbar);
+                getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    Window window = getWindow();
+                    window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                    window.setStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
+                }
+            }
         }
     }
 
@@ -196,12 +249,10 @@ public class ChatActivity extends AppCompatActivity implements View.OnLongClickL
             selectedMessages++;
             messageContent.setBackground(getResources().getDrawable(R.drawable.drawable_chat_item_background_self_sel));
             chatItem.setBackgroundColor(getResources().getColor(R.color.color_chat_item_background_sel));
-            chatItem.setTag(R.string.tag_selected, true);
         } else {
             selectedMessages--;
             messageContent.setBackground(getResources().getDrawable(R.drawable.drawable_chat_item_background_self));
             chatItem.setBackgroundColor(getResources().getColor(android.R.color.transparent));
-            chatItem.setTag(R.string.tag_selected, false);
         }
     }
 
@@ -210,12 +261,10 @@ public class ChatActivity extends AppCompatActivity implements View.OnLongClickL
             selectedMessages++;
             messageContent.setBackground(getResources().getDrawable(R.drawable.drawable_chat_item_background_other_sel));
             chatItem.setBackgroundColor(getResources().getColor(R.color.color_chat_item_background_sel));
-            chatItem.setTag(R.string.tag_selected, true);
         } else {
             selectedMessages--;
             messageContent.setBackground(getResources().getDrawable(R.drawable.drawable_chat_item_background_other));
             chatItem.setBackgroundColor(getResources().getColor(android.R.color.transparent));
-            chatItem.setTag(R.string.tag_selected, false);
         }
     }
 

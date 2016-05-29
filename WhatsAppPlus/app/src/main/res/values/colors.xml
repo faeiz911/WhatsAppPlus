@@ -16,4 +16,7 @@
     <color name="color_chat_message_input">#000000</color>
     <color name="color_group_vertical_divider">#6a9e98</color>
     <color name="color_delete_grey">#9b9b9b</color>
+    <color name="color_toolbar_selection_primary">#00897b</color>
+    <color name="color_toolbar_selection_primary_dark">#00766a</color>
+    <color name="color_toolbar_selection_highlight">#309f94</color>
 </resources>

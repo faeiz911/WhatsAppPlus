@@ -8,7 +8,8 @@
     android:columnCount="1"
     android:rowCount="2"
     android:columnOrderPreserved="false"
-    android:background="@color/color_chat_background">
+    android:background="@color/color_chat_background"
+    android:id="@+id/chat_root">
 
     <include layout="@layout/toolbar_chat"/>
 
