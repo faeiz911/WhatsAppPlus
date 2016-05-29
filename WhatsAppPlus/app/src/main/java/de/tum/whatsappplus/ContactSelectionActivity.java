@@ -88,7 +88,12 @@ public class ContactSelectionActivity extends AppCompatActivity {
     }
 
     public void removeContacts(View view) {
-
+        for(Contact c : contacts) {
+            if(c.name.equals(view.getTag(R.string.tag_remove_contact))) {
+                contacts.remove(c);
+                tableLayout.removeView((View) view.getParent());
+            }
+        }
     }
 
     public void onNextClick(View view) {
