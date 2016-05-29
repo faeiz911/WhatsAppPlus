@@ -72,7 +72,7 @@ public class ContactListActivity extends AppCompatActivity implements CompoundBu
     public void onDoneClick(View view) {
         List<String> selectedContacts = new ArrayList<>();
         for(CheckBox checkBox : checkBoxList) {
-            if (checkBox.isSelected()) {
+            if (checkBox.isChecked()) {
                 selectedContacts.add((String) checkBox.getTag(R.string.tag_checkbox_id));
             }
         }

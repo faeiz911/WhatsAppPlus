@@ -3,8 +3,7 @@
     android:orientation="horizontal" android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:paddingTop="10dp"
-    android:paddingBottom="10dp"
-    android:onClick="removeContact">
+    android:paddingBottom="10dp">
 
     <ImageView
         android:layout_width="50dp"
@@ -36,6 +35,7 @@
         android:layout_marginRight="10dp"
         android:src="@drawable/abc_ic_clear_mtrl_alpha"
         android:background="@android:color/transparent"
-        android:tint="@color/color_delete_grey" />
+        android:tint="@color/color_delete_grey"
+        android:onClick="removeContact"/>
 
 </RelativeLayout>

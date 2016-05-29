@@ -2,7 +2,6 @@ package de.tum.whatsappplus;
 
 import android.content.Intent;
 import android.graphics.PorterDuff;
-import android.media.Image;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -24,7 +23,6 @@ public class ContactSelectionActivity extends AppCompatActivity {
     private EditText contactName;
     private String groupTitle;
     private List<Contact> contacts;
-    private List<ImageButton> removeButtons;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,15 +44,15 @@ public class ContactSelectionActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
+        Log.d(TAG, "onResume called");
         super.onResume();
         tableLayout.removeAllViews();
         for(Contact c : contacts) {
             View contact_item = getLayoutInflater().inflate(R.layout.view_contact_remove, tableLayout, false);
             ((ImageView) contact_item.findViewById(R.id.chat_icon)).setImageResource(c.imageID);
             ((TextView) contact_item.findViewById(R.id.chat_name)).setText(c.name);
-            ImageButton removeButton = (ImageButton) findViewById(R.id.removeContact);
+            ImageButton removeButton = (ImageButton) contact_item.findViewById(R.id.removeContact);
             removeButton.setTag(R.string.tag_remove_contact, c.name);
-            removeButtons.add(removeButton);
             tableLayout.addView(contact_item);
         }
     }
@@ -89,10 +87,12 @@ public class ContactSelectionActivity extends AppCompatActivity {
         startActivityForResult(contactSelection, 1337);
     }
 
-    public void removeContacts(View view) {
-        for(Contact c : contacts) {
+    public void removeContact(View view) {
+        for (int i = 0; i < contacts.size(); i++) {
+            Contact c = contacts.get(i);
             if(c.name.equals(view.getTag(R.string.tag_remove_contact))) {
                 contacts.remove(c);
+                --i;
                 tableLayout.removeView((View) view.getParent());
             }
         }
