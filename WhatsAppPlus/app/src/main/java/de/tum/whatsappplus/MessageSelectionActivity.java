@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
@@ -40,7 +41,16 @@ public class MessageSelectionActivity extends AppCompatActivity implements View.
                 contacts.add(c.name);
             }
         }
-        ArrayAdapter<String > adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, contacts.toArray(new String[contacts.size()]));
+        ArrayAdapter<String > adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, contacts.toArray(new String[contacts.size()])) {
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                View v = super.getView(position, convertView, parent);
+                ((TextView) v).setTextColor(
+                        getResources().getColorStateList(android.R.color.black)
+                );
+                return v;
+            }
+        };
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         contactSpinner.setAdapter(adapter);
         contactSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
