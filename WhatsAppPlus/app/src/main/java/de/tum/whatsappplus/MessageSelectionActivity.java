@@ -49,7 +49,14 @@ public class MessageSelectionActivity extends AppCompatActivity implements View.
                 String contact = (String) ((TextView) selectedItemView).getText();
                 List<Message> messages = Constants.contacts.get(contact).chat;
                 for(Message m : messages) {
-                    addNewChatMessage(m);
+                    View messageView = addNewChatMessage(m);
+                    if(m.selected) {
+                        if(m.author.equals("self")) {
+                            selectSelfMessage(true, messageView);
+                        } else {
+                            selectOtherMessage(true, messageView);
+                        }
+                    }
                 }
             }
 
@@ -57,19 +64,12 @@ public class MessageSelectionActivity extends AppCompatActivity implements View.
             public void onNothingSelected(AdapterView<?> parentView) {
                 return;
             }
-
         });
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("New group");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
     }
 
     private void onDoneClick(View view) {
