@@ -19,4 +19,5 @@
     <string name="action_convert_to_group">Convert to group</string>
     <string name="tag_chat_owner">chat_owner</string>
     <string name="tag_selected">selected</string>
+    <string name="tag_remove_contact">remove</string>
 </resources>
