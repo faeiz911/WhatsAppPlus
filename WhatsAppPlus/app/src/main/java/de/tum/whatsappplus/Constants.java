@@ -11,6 +11,8 @@ public class Constants {
     public static final String EXTRA_CHAT_ID = "chat_id";
     public static final String EXTRA_CONTACTS_ID = "contacts";
 
+    public static final int MESSAGE_MARGIN_TOP = 5;
+
     static {
         contacts = new HashMap<>();
         ArrayList<Message> messages;

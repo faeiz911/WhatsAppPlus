@@ -30,7 +30,6 @@ import java.util.Calendar;
 public class ChatActivity extends AppCompatActivity implements View.OnLongClickListener, View.OnClickListener {
 
     private static final String TAG = ChatActivity.class.getName();
-    private static final int MESSAGE_MARGIN_TOP = 5;
 
     private Toolbar toolbar;
     private EditText chatInputEditText;
@@ -110,7 +109,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnLongClickL
         View chatMessageContent = chatItem.findViewById(R.id.chat_message_content);
 
         TableLayout.LayoutParams chatItemLayoutParams = (TableLayout.LayoutParams) chatItem.getLayoutParams();
-        chatItemLayoutParams.topMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, MESSAGE_MARGIN_TOP, getResources().getDisplayMetrics());
+        chatItemLayoutParams.topMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, Constants.MESSAGE_MARGIN_TOP, getResources().getDisplayMetrics());
 
         LinearLayout.LayoutParams chatMessageContentLayoutParams = (LinearLayout.LayoutParams) chatMessageContent.getLayoutParams();
 

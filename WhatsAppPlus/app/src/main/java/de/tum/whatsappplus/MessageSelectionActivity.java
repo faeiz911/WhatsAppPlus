@@ -1,22 +1,26 @@
 package de.tum.whatsappplus;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.ExpandableListView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.TableLayout;
+import android.widget.TextView;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
-public class MessageSelectionActivity extends AppCompatActivity {
+public class MessageSelectionActivity extends AppCompatActivity implements View.OnClickListener {
 
     private String[] selectedContacts;
     private String groupTitle;
     private ArrayList<Contact> contacts;
     private Spinner contactSpinner;
+
+    private TableLayout table;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,5 +57,73 @@ public class MessageSelectionActivity extends AppCompatActivity {
 
     private void onDoneClick(View view) {
 
+    }
+
+    private void addNewChatMessage(Message message) {
+        View chatItem = getLayoutInflater().inflate(R.layout.view_chat_item, table, false);
+        ((TextView) chatItem.findViewById(R.id.chat_message)).setText(message.text);
+        ((TextView) chatItem.findViewById(R.id.chat_timestamp)).setText(message.timeStamp);
+
+        View chatMessageContent = chatItem.findViewById(R.id.chat_message_content);
+
+        TableLayout.LayoutParams chatItemLayoutParams = (TableLayout.LayoutParams) chatItem.getLayoutParams();
+        chatItemLayoutParams.topMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, Constants.MESSAGE_MARGIN_TOP, getResources().getDisplayMetrics());
+
+        LinearLayout.LayoutParams chatMessageContentLayoutParams = (LinearLayout.LayoutParams) chatMessageContent.getLayoutParams();
+
+        if (message.author.equals("self")) {
+            chatMessageContentLayoutParams.leftMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 80, getResources().getDisplayMetrics());
+            chatMessageContentLayoutParams.rightMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, getResources().getDisplayMetrics());
+            chatMessageContent.setBackground(getResources().getDrawable(R.drawable.drawable_chat_item_background_self));
+        } else {
+            chatMessageContentLayoutParams.leftMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, getResources().getDisplayMetrics());
+            chatMessageContentLayoutParams.rightMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 80, getResources().getDisplayMetrics());
+            chatMessageContent.setBackground(getResources().getDrawable(R.drawable.drawable_chat_item_background_other));
+        }
+
+        chatItem.setTag(R.string.tag_chat_message, message);
+        chatMessageContent.setOnClickListener(this);
+
+        chatMessageContent.setLayoutParams(chatMessageContentLayoutParams);
+
+        table.addView(chatItem, chatItemLayoutParams);
+    }
+
+    @Override
+    public void onClick(View v) {
+        selectOrDeselectMessage(v);
+    }
+
+    private void selectOrDeselectMessage(View messageContent) {
+        View chatItem = (View) messageContent.getParent();
+        Message message = (Message) chatItem.getTag(R.string.tag_chat_message);
+        boolean chatItemSelected = message.selected;
+        if ("self".equals(message.author)) {
+            selectSelfMessage(!chatItemSelected, messageContent, chatItem);
+        } else {
+            selectOtherMessage(!chatItemSelected, messageContent, chatItem);
+        }
+
+        message.selected = !message.selected;
+    }
+
+    private void selectSelfMessage(boolean toggle, View messageContent, View chatItem) {
+        if (toggle) {
+            messageContent.setBackground(getResources().getDrawable(R.drawable.drawable_chat_item_background_self_sel));
+            chatItem.setBackgroundColor(getResources().getColor(R.color.color_chat_item_background_sel));
+        } else {
+            messageContent.setBackground(getResources().getDrawable(R.drawable.drawable_chat_item_background_self));
+            chatItem.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+        }
+    }
+
+    private void selectOtherMessage(boolean toggle, View messageContent, View chatItem) {
+        if (toggle) {
+            messageContent.setBackground(getResources().getDrawable(R.drawable.drawable_chat_item_background_other_sel));
+            chatItem.setBackgroundColor(getResources().getColor(R.color.color_chat_item_background_sel));
+        } else {
+            messageContent.setBackground(getResources().getDrawable(R.drawable.drawable_chat_item_background_other));
+            chatItem.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+        }
     }
 }
