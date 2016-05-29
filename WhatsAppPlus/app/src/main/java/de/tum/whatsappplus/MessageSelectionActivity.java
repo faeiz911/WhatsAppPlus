@@ -1,6 +1,7 @@
 package de.tum.whatsappplus;
 
 import android.content.Intent;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -41,16 +42,7 @@ public class MessageSelectionActivity extends AppCompatActivity implements View.
                 contacts.add(c.name);
             }
         }
-        ArrayAdapter<String > adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, contacts.toArray(new String[contacts.size()])) {
-            @Override
-            public View getView(int position, View convertView, ViewGroup parent) {
-                View v = super.getView(position, convertView, parent);
-                ((TextView) v).setTextColor(
-                        getResources().getColorStateList(android.R.color.black)
-                );
-                return v;
-            }
-        };
+        ArrayAdapter<String > adapter = new ArrayAdapter<String>(this, R.layout.spinner_item, contacts.toArray(new String[contacts.size()]));
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         contactSpinner.setAdapter(adapter);
         contactSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
