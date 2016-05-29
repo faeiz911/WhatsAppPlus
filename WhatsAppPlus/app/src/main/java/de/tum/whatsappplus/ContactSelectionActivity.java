@@ -2,13 +2,17 @@ package de.tum.whatsappplus;
 
 import android.content.Intent;
 import android.graphics.PorterDuff;
+import android.media.Image;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TableLayout;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +24,7 @@ public class ContactSelectionActivity extends AppCompatActivity {
     private EditText contactName;
     private String groupTitle;
     private List<Contact> contacts;
+    private List<ImageButton> removeButtons;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +45,16 @@ public class ContactSelectionActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        //TODO Add contacts to table
+        tableLayout.removeAllViews();
+        for(Contact c : contacts) {
+            View contact_item = getLayoutInflater().inflate(R.layout.view_contact_remove, tableLayout, false);
+            ((ImageView) contact_item.findViewById(R.id.chat_icon)).setImageResource(c.imageID);
+            ((TextView) contact_item.findViewById(R.id.chat_name)).setText(c.name);
+            ImageButton removeButton = (ImageButton) findViewById(R.id.removeContact);
+            removeButton.setTag(R.string.tag_remove_contact, c.name);
+            removeButtons.add(removeButton);
+            tableLayout.addView(contact_item);
+        }
     }
 
     @Override
@@ -71,6 +85,10 @@ public class ContactSelectionActivity extends AppCompatActivity {
 
         contactSelection.putExtra("nameArray", stringArray);
         startActivityForResult(contactSelection, 1337);
+    }
+
+    public void removeContacts(View view) {
+
     }
 
     public void onNextClick(View view) {
