@@ -32,7 +32,7 @@
 
             <Spinner
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:id="@+id/contactSpinner"
                 android:layout_gravity="center_horizontal"
                 android:textColor="#000000"
@@ -40,7 +40,8 @@
                 android:layout_marginBottom="10dp"
                 android:layout_marginLeft="70dp"
                 android:layout_marginRight="70dp"
-                android:transitionGroup="false" />
+                android:transitionGroup="false"
+                android:background="@android:color/white" />
         </LinearLayout>
 
         <ScrollView
