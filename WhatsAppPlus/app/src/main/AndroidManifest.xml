@@ -28,7 +28,9 @@
         <activity
             android:name=".ContactListActivity"
             android:parentActivityName=".ContactSelectionActivity"></activity>
-        <activity android:name=".MessageSelectionActivity"></activity>
+        <activity
+            android:name=".MessageSelectionActivity"
+            android:parentActivityName=".ContactSelectionActivity"></activity>
     </application>
 
 </manifest>
