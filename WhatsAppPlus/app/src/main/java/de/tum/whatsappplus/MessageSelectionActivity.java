@@ -13,6 +13,8 @@ import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class MessageSelectionActivity extends AppCompatActivity implements View.OnClickListener {
@@ -20,8 +22,6 @@ public class MessageSelectionActivity extends AppCompatActivity implements View.
     private String[] selectedContacts;
     private String groupTitle;
     private Spinner contactSpinner;
-    private TableLayout messageList;
-
     private TableLayout table;
 
     @Override
@@ -30,26 +30,41 @@ public class MessageSelectionActivity extends AppCompatActivity implements View.
         setContentView(R.layout.activity_message_selection);
         selectedContacts = getIntent().getStringArrayExtra(Constants.EXTRA_CONTACTS_ID);
         groupTitle = getIntent().getStringExtra("groupTitle");
-        messageList = (TableLayout) findViewById(R.id.messageList);
+        table = (TableLayout) findViewById(R.id.messageList);
 
         contactSpinner = (Spinner) findViewById(R.id.contactSpinner);
-        ArrayAdapter<String > adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, selectedContacts);
+        List<String> contacts = new ArrayList<>();
+        for(String contact : selectedContacts) {
+            Contact c = Constants.contacts.get(contact);
+            if(c.chat != null) {
+                contacts.add(c.name);
+            }
+        }
+        ArrayAdapter<String > adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, contacts.toArray(new String[contacts.size()]));
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         contactSpinner.setAdapter(adapter);
         contactSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                messageList.removeAllViews();
+                table.removeAllViews();
                 String contact = (String) ((TextView) selectedItemView).getText();
                 List<Message> messages = Constants.contacts.get(contact).chat;
-
+                for(Message m : messages) {
+                    View messageView = addNewChatMessage(m);
+                    if(m.selected) {
+                        if(m.author.equals("self")) {
+                            selectSelfMessage(true, messageView);
+                        } else {
+                            selectOtherMessage(true, messageView);
+                        }
+                    }
+                }
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parentView) {
                 return;
             }
-
         });
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -58,11 +73,6 @@ public class MessageSelectionActivity extends AppCompatActivity implements View.
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-    }
 
     public void onCreateClick(View view) {
         Intent startGroupChatActivity = new Intent(this, ChatActivity.class);
