@@ -41,6 +41,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnLongClickL
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(TAG, "onCreate called with " + savedInstanceState);
 
         Intent intent = getIntent();
         String chatType = intent.getStringExtra(Constants.EXTRA_CHAT_TYPE);

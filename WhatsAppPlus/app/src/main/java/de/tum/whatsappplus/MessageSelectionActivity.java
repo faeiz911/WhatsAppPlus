@@ -79,6 +79,7 @@ public class MessageSelectionActivity extends AppCompatActivity implements View.
         startGroupChatActivity.putExtra(Constants.EXTRA_CHAT_TYPE, "group");
         startGroupChatActivity.putExtra(Constants.EXTRA_GROUP_TITLE, groupTitle);
         startGroupChatActivity.putExtra(Constants.EXTRA_CONTACTS_ID, selectedContacts);
+        startGroupChatActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(startGroupChatActivity);
     }
 

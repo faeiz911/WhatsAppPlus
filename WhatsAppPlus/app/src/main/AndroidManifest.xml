@@ -18,7 +18,6 @@
         <activity
             android:name=".ChatActivity"
             android:parentActivityName=".ChatListActivity"
-            android:clearTaskOnLaunch="true"
             android:windowSoftInputMode="stateHidden">
         </activity>
         <activity
