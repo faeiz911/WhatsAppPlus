@@ -42,8 +42,15 @@ public class ChatActivity extends AppCompatActivity implements View.OnLongClickL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        String chatId = getIntent().getStringExtra(Constants.EXTRA_CHAT_ID);
-        contact = Constants.contacts.get(chatId);
+        Intent intent = getIntent();
+        String chatType = intent.getStringExtra(Constants.EXTRA_CHAT_TYPE);
+        if ("group".equals(chatType)) {
+            String[] contacts = intent.getStringArrayExtra(Constants.EXTRA_CONTACTS_ID);
+            contact = Constants.contacts.get(contacts[0]);
+        } else {
+            String chatId = getIntent().getStringExtra(Constants.EXTRA_CHAT_ID);
+            contact = Constants.contacts.get(chatId);
+        }
 
         setContentView(R.layout.activity_chat);
 

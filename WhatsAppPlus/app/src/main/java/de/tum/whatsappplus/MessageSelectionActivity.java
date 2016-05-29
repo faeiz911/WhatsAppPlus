@@ -1,5 +1,6 @@
 package de.tum.whatsappplus;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -63,8 +64,12 @@ public class MessageSelectionActivity extends AppCompatActivity implements View.
 
     }
 
-    private void onDoneClick(View view) {
-
+    public void onCreateClick(View view) {
+        Intent startGroupChatActivity = new Intent(this, ChatActivity.class);
+        startGroupChatActivity.putExtra(Constants.EXTRA_CHAT_TYPE, "group");
+        startGroupChatActivity.putExtra(Constants.EXTRA_GROUP_TITLE, groupTitle);
+        startGroupChatActivity.putExtra(Constants.EXTRA_CONTACTS_ID, selectedContacts);
+        startActivity(startGroupChatActivity);
     }
 
     private View addNewChatMessage(Message message) {
