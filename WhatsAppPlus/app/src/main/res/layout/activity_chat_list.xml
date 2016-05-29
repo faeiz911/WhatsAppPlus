@@ -11,7 +11,8 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="de.tum.whatsappplus.ChatListActivity">
+        tools:context="de.tum.whatsappplus.ChatListActivity"
+        android:background="@color/colorAccent">
 
         <TableLayout
             android:layout_width="match_parent"
