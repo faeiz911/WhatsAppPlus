@@ -35,6 +35,8 @@ public class ContactSelectionActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("New group");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
