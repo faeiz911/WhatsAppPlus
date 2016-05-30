@@ -34,6 +34,9 @@ public class ContactSelectionActivity extends AppCompatActivity {
         Intent intent = getIntent();
         chatId = intent.getStringExtra(Constants.EXTRA_CHAT_ID);
         groupTitle = intent.getStringExtra(Constants.EXTRA_GROUP_TITLE);
+
+        Log.i(TAG, "Contact selection activity started." + (chatId != null ? " Pre-selected contact is '" + chatId + "', group title is '" + groupTitle + "'." : ""));
+
         Contact fromChat = Constants.contacts.get(chatId);
 
         contacts = new ArrayList<>();
@@ -68,24 +71,31 @@ public class ContactSelectionActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.d(TAG, "onActivityResult called with reqc=" + requestCode + " resc=" + resultCode + " data=" + data);
         List<Contact> newContacts = new ArrayList<>();
         String[] selectedContacts = data.getStringArrayExtra(Constants.RESULT_SELECTED_CONTACTS);
         if (requestCode == SELECT_CONTACTS_REQUEST_CODE && resultCode == RESULT_OK) {
+            String selectedContactsConcatString = "";
             for (String key : Constants.contacts.keySet()) {
                 Contact c = Constants.contacts.get(key);
                 for (String contactName : selectedContacts) {
                     if (contactName.equals(c.name)) {
+                        selectedContactsConcatString += key + ", ";
                         newContacts.add(c);
                     }
                 }
             }
+
+            if (!selectedContactsConcatString.isEmpty())
+                Log.i(TAG, "Contact list activity returned following contacts: " + selectedContactsConcatString.substring(0, selectedContactsConcatString.length() - 2));
+            else
+                Log.i(TAG, "Contact list activity returned with no selected contacts.");
+
             contacts = newContacts;
         }
     }
 
     public void onAddContactsClick(View view) {
-        Log.d(TAG, "clicked on " + view.getTag(R.string.tag_chat_id));
+        Log.i(TAG, "Starting contact list activity.");
         Intent contactSelectionIntent = new Intent(this, ContactListActivity.class);
         String[] stringArray = new String[contacts.size()];
         for (int i = 0; i < contacts.size(); i++) {
@@ -96,24 +106,31 @@ public class ContactSelectionActivity extends AppCompatActivity {
         startActivityForResult(contactSelectionIntent, SELECT_CONTACTS_REQUEST_CODE);
     }
 
-    public void removeContact(View view) {
+    public void onRemoveContactClick(View view) {
         for (int i = 0; i < contacts.size(); i++) {
             Contact c = contacts.get(i);
             if(c.name.equals(view.getTag(R.string.tag_remove_contact))) {
                 contacts.remove(c);
                 --i;
                 tableLayout.removeView((View) view.getParent());
+                Log.i(TAG, "Removed '" + c.name + "'.");
             }
         }
     }
 
     public void onNextClick(View view) {
-        Log.d(TAG, "onNextClick in " + ContactSelectionActivity.class.getSimpleName());
         Intent messageSelectionIntent = new Intent(this, MessageSelectionActivity.class);
         String[] selectedContacts = new String[contacts.size()];
-        for(int i = 0; i < selectedContacts.length; i++) {
+        String selectedContactsConcatString = "";
+        for (int i = 0; i < selectedContacts.length; i++) {
             selectedContacts[i] = contacts.get(i).name;
+            selectedContactsConcatString += selectedContacts[i] + ", ";
         }
+        if (!selectedContactsConcatString.isEmpty())
+            Log.i(TAG, "Clicked on Next in contact selection activity with following contacts selected: " + selectedContactsConcatString.substring(0, selectedContactsConcatString.length() - 2));
+        else
+            Log.i(TAG, "Clicked on Next in contact selection activity with no selected contacts.");
+
         messageSelectionIntent.putExtra(Constants.EXTRA_CHAT_ID, chatId);
         messageSelectionIntent.putExtra(Constants.EXTRA_CONTACTS_ID, selectedContacts);
         messageSelectionIntent.putExtra(Constants.EXTRA_GROUP_TITLE, groupTitle);

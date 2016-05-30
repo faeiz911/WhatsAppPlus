@@ -19,8 +19,12 @@ public class ChatListActivity extends AppCompatActivity {
 
     private static final String TAG = ChatListActivity.class.getName();
 
+    private boolean activityJustCreated = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.i(TAG, "Chat list activity started.");
+        activityJustCreated = true;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_list);
 
@@ -31,6 +35,7 @@ public class ChatListActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
+        if (!activityJustCreated) Log.i(TAG, "Returned to chat list activity.");
         super.onResume();
 
         TableLayout table = (TableLayout) findViewById(R.id.chat_list_table);
@@ -74,10 +79,15 @@ public class ChatListActivity extends AppCompatActivity {
     }
 
     public void onChatSummaryClick(View view) {
-        Log.i(TAG, "clicked on " + view.getTag(R.string.tag_chat_id));
+        Log.i(TAG, "Clicked on chat with '" + view.getTag(R.string.tag_chat_id) + "\'.");
         Intent openChat = new Intent(this, ChatActivity.class);
         openChat.putExtra(Constants.EXTRA_CHAT_ID, (String) view.getTag(R.string.tag_chat_id));
         startActivity(openChat);
     }
 
+    @Override
+    protected void onStop() {
+        Log.i(TAG, "Left chat list activity.");
+        super.onStop();
+    }
 }

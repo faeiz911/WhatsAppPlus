@@ -5,6 +5,7 @@ import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.AdapterView;
@@ -21,10 +22,13 @@ import java.util.Map;
 
 public class MessageSelectionActivity extends AppCompatActivity implements View.OnClickListener {
 
+    private static final String TAG = MessageSelectionActivity.class.getName();
+
     private String[] selectedContacts;
     private Map<String, List<Message>> selectedMessages;
     private String groupTitle;
     private int groupIcon;
+    private boolean loggingSelections = false;
 
     private TableLayout table;
 
@@ -34,8 +38,15 @@ public class MessageSelectionActivity extends AppCompatActivity implements View.
 
         Intent intent = getIntent();
         String chatId = intent.getStringExtra(Constants.EXTRA_CHAT_ID);
-        selectedContacts = intent.getStringArrayExtra(Constants.EXTRA_CONTACTS_ID);
         groupTitle = intent.getStringExtra(Constants.EXTRA_GROUP_TITLE);
+        selectedContacts = intent.getStringArrayExtra(Constants.EXTRA_CONTACTS_ID);
+
+        String selectedContactsConcatString = "";
+        for (String contact : selectedContacts) {
+            selectedContactsConcatString += contact + ", ";
+        }
+        Log.i(TAG, "Message selection activity started. Group title is '" + groupTitle + "'." + (!selectedContactsConcatString.isEmpty() ? " Contacts to choose message from are: " + selectedContactsConcatString.substring(0, selectedContactsConcatString.length() - 2) : ""));
+
         groupIcon = intent.getIntExtra(Constants.EXTRA_GROUP_ICON, R.drawable.whatsappplus_icon_group);
 
         final String[] selectedMessages = intent.getStringArrayExtra(Constants.EXTRA_PRE_SELECTED_MESSAGES);
@@ -90,6 +101,8 @@ public class MessageSelectionActivity extends AppCompatActivity implements View.
                     table.removeAllViews();
                 }
 
+                loggingSelections = false;
+
                 String contactId = (String) ((TextView) selectedItemView).getText();
                 table.setTag(R.string.tag_chat_id, contactId);
                 List<Message> messages = Constants.contacts.get(contactId).chat;
@@ -109,6 +122,7 @@ public class MessageSelectionActivity extends AppCompatActivity implements View.
                         }
                     }
                 }
+                loggingSelections = true;
             }
 
             @Override
@@ -123,13 +137,25 @@ public class MessageSelectionActivity extends AppCompatActivity implements View.
 
 
     public void onCreateClick(View view) {
-        Constants.contacts.put(groupTitle, new Contact(groupTitle, groupIcon, getGroupMessages(), true));
+        List<Message> groupMessages = getGroupMessages();
+        Constants.contacts.put(groupTitle, new Contact(groupTitle, groupIcon, groupMessages, true));
 
         Intent startGroupChatActivity = new Intent(this, ChatActivity.class);
         startGroupChatActivity.putExtra(Constants.EXTRA_CHAT_TYPE, Constants.CHAT_TYPE_GROUP);
         startGroupChatActivity.putExtra(Constants.EXTRA_CHAT_ID, groupTitle);
         startGroupChatActivity.putExtra(Constants.EXTRA_CONTACTS_ID, selectedContacts);
         startGroupChatActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+        String selectedMessagesConcatString = "";
+        for (Message m : groupMessages) {
+            selectedMessagesConcatString += "[" + m.author + " : " + m.text + "]\n";
+        }
+        String selectedContactsConcatString = "";
+        for (String contact : selectedContacts) {
+            selectedContactsConcatString += contact + ", ";
+        }
+        Log.i(TAG, "Clicked on Create in message selection activity. Group title is '" + groupTitle + "'. Group contacts are: " + selectedContactsConcatString.substring(0, selectedContactsConcatString.length() - 2)
+                + (!selectedMessagesConcatString.isEmpty() ? "\nSelected messages are:\n" + selectedMessagesConcatString.substring(0, selectedMessagesConcatString.length() - 1) : ""));
         startActivity(startGroupChatActivity);
     }
 
@@ -161,8 +187,8 @@ public class MessageSelectionActivity extends AppCompatActivity implements View.
 
     private View addNewChatMessage(Message message) {
         View chatItem = getLayoutInflater().inflate(R.layout.view_chat_item, table, false);
-        ((TextView) chatItem.findViewById(R.id.chat_message)).setText(message.text);
-        ((TextView) chatItem.findViewById(R.id.chat_timestamp)).setText(message.timeStamp);
+        ((TextView) chatItem.findViewById(R.id.chat_message_text)).setText(message.text);
+        ((TextView) chatItem.findViewById(R.id.chat_message_timestamp)).setText(message.timeStamp);
 
         View chatMessageContent = chatItem.findViewById(R.id.chat_message_content);
 
@@ -210,24 +236,36 @@ public class MessageSelectionActivity extends AppCompatActivity implements View.
     private void selectSelfMessage(boolean toggle, View chatItem) {
         View messageContent = chatItem.findViewById(R.id.chat_message_content);
         if (toggle) {
+            if (loggingSelections) Log.i(TAG, "Selected own message '" + ((TextView)messageContent.findViewById(R.id.chat_message_text)).getText() +
+                    "' from '" + ((TextView)messageContent.findViewById(R.id.chat_message_timestamp)).getText() + "'.");
             messageContent.setBackground(getResources().getDrawable(R.drawable.drawable_chat_item_background_self_sel));
             chatItem.setBackgroundColor(getResources().getColor(R.color.color_chat_item_background_sel));
             chatItem.setTag(R.string.tag_selected, true);
         } else {
+            if (loggingSelections) Log.i(TAG, "Deselected own message '" + ((TextView)messageContent.findViewById(R.id.chat_message_text)).getText() +
+                    "' from '" + ((TextView)messageContent.findViewById(R.id.chat_message_timestamp)).getText() + "'.");
             messageContent.setBackground(getResources().getDrawable(R.drawable.drawable_chat_item_background_self));
             chatItem.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+            chatItem.setTag(R.string.tag_selected, false);
         }
     }
 
     private void selectOtherMessage(boolean toggle, View chatItem) {
         View messageContent = chatItem.findViewById(R.id.chat_message_content);
         if (toggle) {
+            if (loggingSelections) Log.i(TAG, "Selected " + table.getTag(R.string.tag_chat_id) + "'s message '"
+                    + ((TextView)messageContent.findViewById(R.id.chat_message_text)).getText() +
+                    "' from '" + ((TextView)messageContent.findViewById(R.id.chat_message_timestamp)).getText() + "'.");
             messageContent.setBackground(getResources().getDrawable(R.drawable.drawable_chat_item_background_other_sel));
             chatItem.setBackgroundColor(getResources().getColor(R.color.color_chat_item_background_sel));
             chatItem.setTag(R.string.tag_selected, true);
         } else {
+            if (loggingSelections) Log.i(TAG, "Deselected " + table.getTag(R.string.tag_chat_id) + "'s message '"
+                    + ((TextView)messageContent.findViewById(R.id.chat_message_text)).getText() +
+                    "' from '" + ((TextView)messageContent.findViewById(R.id.chat_message_timestamp)).getText() + "'.");
             messageContent.setBackground(getResources().getDrawable(R.drawable.drawable_chat_item_background_other));
             chatItem.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+            chatItem.setTag(R.string.tag_selected, false);
         }
     }
 }

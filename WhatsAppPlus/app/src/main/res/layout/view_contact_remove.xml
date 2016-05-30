@@ -36,6 +36,6 @@
         android:src="@drawable/abc_ic_clear_mtrl_alpha"
         android:background="@android:color/transparent"
         android:tint="@color/color_delete_grey"
-        android:onClick="removeContact"/>
+        android:onClick="onRemoveContactClick"/>
 
 </RelativeLayout>

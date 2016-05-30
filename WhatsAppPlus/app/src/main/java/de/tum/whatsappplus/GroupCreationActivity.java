@@ -5,6 +5,7 @@ import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -14,17 +15,18 @@ public class GroupCreationActivity extends AppCompatActivity {
 
     private static final String TAG = GroupCreationActivity.class.getName();
     private EditText groupTitle;
-    private String chat_id;
+    private String chatId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_creation);
 
-        chat_id = getIntent().getStringExtra(Constants.EXTRA_CHAT_ID);
+        chatId = getIntent().getStringExtra(Constants.EXTRA_CHAT_ID);
+        Log.i(TAG, "Group creation activity started"  + (chatId != null ? " from chat with '" + chatId + "'." : "."));
 
         // test that indeed the correct messages are selected:
-//        List<Message> contactMessages = Constants.contacts.get(chat_id).chat;
+//        List<Message> contactMessages = Constants.contacts.get(chatId).chat;
 //        for (Message m : contactMessages) {
 //            if (m.selected)
 //                Log.i(TAG, m.text);
@@ -40,20 +42,23 @@ public class GroupCreationActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("New Group");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        //ImageButton iconButton = (ImageButton) findViewById(R.id.imageButton);
     }
 
     public void onNextClick(View view) {
         int titleLength = groupTitle.getText().length();
         if (titleLength < 1) {
+            Log.i(TAG, "Attempted to create group with no title.");
             Toast.makeText(this, "Please enter a group name", Toast.LENGTH_SHORT).show();
         } else {
             Intent openContactSelection = new Intent(this, ContactSelectionActivity.class);
 
             char[] groupTitleChars = new char[titleLength];
             groupTitle.getText().getChars(0, titleLength, groupTitleChars, 0);
-            openContactSelection.putExtra(Constants.EXTRA_GROUP_TITLE, new String(groupTitleChars));
-            openContactSelection.putExtra(Constants.EXTRA_CHAT_ID, chat_id);
+            String groupTitleString = new String(groupTitleChars);
+
+            Log.i(TAG, "Clicked on Next in group creation activity with entered group title '" + groupTitleString + "'.");
+            openContactSelection.putExtra(Constants.EXTRA_GROUP_TITLE, groupTitleString);
+            openContactSelection.putExtra(Constants.EXTRA_CHAT_ID, chatId);
             openContactSelection.putExtra(Constants.EXTRA_PRE_SELECTED_MESSAGES, getIntent().getStringArrayExtra(Constants.EXTRA_PRE_SELECTED_MESSAGES));
 
             startActivity(openContactSelection);

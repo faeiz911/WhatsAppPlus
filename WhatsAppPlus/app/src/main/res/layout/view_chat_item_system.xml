@@ -24,7 +24,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Dies ist eine Systemnachricht. Auf sie kann nicht geclickt werden. Sie hat außerdem keinen Timestamp."
-            android:id="@+id/chat_message"
+            android:id="@+id/chat_message_text"
             android:textColor="@color/color_chat_system_message_text"
             android:gravity="center_horizontal"
             android:layout_margin="5dp"

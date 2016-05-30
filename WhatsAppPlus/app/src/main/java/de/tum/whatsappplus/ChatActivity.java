@@ -43,7 +43,6 @@ public class ChatActivity extends AppCompatActivity implements View.OnLongClickL
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d(TAG, "onCreate called with " + savedInstanceState);
 
         Intent intent = getIntent();
         String chatType, chatId;
@@ -56,9 +55,16 @@ public class ChatActivity extends AppCompatActivity implements View.OnLongClickL
             chatId = savedInstanceState.getString(Constants.EXTRA_CHAT_ID);
         }
 
+        Log.i(TAG, "Chat activity for '" + chatId + "' started.");
+
         isGroupChat = Constants.CHAT_TYPE_GROUP.equals(chatType);
         if (isGroupChat) {
             String[] contacts = intent.getStringArrayExtra(Constants.EXTRA_CONTACTS_ID);
+            String contactsConcatString = "";
+            for (String contact : contacts) {
+                contactsConcatString += contact + ", ";
+            }
+            Log.i(TAG, "Chat activity is a group chat for " + contactsConcatString.substring(0, contactsConcatString.length() - 2));
         }
         contact = Constants.contacts.get(chatId);
 
@@ -129,15 +135,15 @@ public class ChatActivity extends AppCompatActivity implements View.OnLongClickL
         } else {
             if (contact.isGroupContact && !Constants.AUTHOR_SELF.equals(message.author)) {
                 chatItem = getLayoutInflater().inflate(R.layout.view_chat_item_group, table, false);
-                TextView chatAuthorTextView = (TextView) chatItem.findViewById(R.id.chat_author);
+                TextView chatAuthorTextView = (TextView) chatItem.findViewById(R.id.chat_message_author);
                 chatAuthorTextView.setText(message.author);
                 chatAuthorTextView.setTextColor(Constants.contacts.get(message.author).color);
             } else {
                 chatItem = getLayoutInflater().inflate(R.layout.view_chat_item, table, false);
             }
-            ((TextView) chatItem.findViewById(R.id.chat_timestamp)).setText(message.timeStamp);
+            ((TextView) chatItem.findViewById(R.id.chat_message_timestamp)).setText(message.timeStamp);
         }
-        ((TextView) chatItem.findViewById(R.id.chat_message)).setText(message.text);
+        ((TextView) chatItem.findViewById(R.id.chat_message_text)).setText(message.text);
 
         View chatMessageContent = chatItem.findViewById(R.id.chat_message_content);
 
@@ -187,6 +193,8 @@ public class ChatActivity extends AppCompatActivity implements View.OnLongClickL
             editable.getChars(0, editable.length(), messageTextChars, 0);
             String messageText = new String(messageTextChars);
 
+            Log.i(TAG, "Sent message '" + messageText + "' to " + contact.name + ".");
+
             Message message = new Message(Constants.AUTHOR_SELF, messageText, Constants.getCurrentTimeStamp());
 
             addNewChatMessage(message);
@@ -200,7 +208,11 @@ public class ChatActivity extends AppCompatActivity implements View.OnLongClickL
     }
 
     public void onConvertToGroupClick(MenuItem menuItem) {
-        Log.d(TAG, "onConvertToGroupClick with action: " + menuItem.getItemId());
+        if (menuItem.getItemId() == R.id.action_convert_to_group)
+            Log.i(TAG, "Clicked on 'Convert to group' in standard options menu (without selected messages).");
+        else if (menuItem.getItemId() == R.id.action_convert_to_group_with_messages) {
+            Log.i(TAG, "Clicked on 'Convert to group' in action bar (while having messages selected).");
+        }
         Intent convertToGroupIntent = new Intent(this, GroupCreationActivity.class);
         convertToGroupIntent.putExtra(Constants.EXTRA_CHAT_ID, contact.name);
         convertToGroupIntent.putExtra(Constants.EXTRA_PRE_SELECTED_MESSAGES, getSelectedMessages());
@@ -254,6 +266,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnLongClickL
         if (selectedMessages > 0) {
             // toolbar is different, load it
             if (toolbar.getId() != R.id.toolbar_selectionmode) {
+                Log.i(TAG, "Selection mode initiated.");
                 ViewGroup chatRoot = (ViewGroup) findViewById(R.id.chat_root);
                 chatRoot.removeView(toolbar);
                 toolbar = (Toolbar) getLayoutInflater().inflate(R.layout.toolbar_chat_selectionmode, chatRoot, false);
@@ -271,6 +284,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnLongClickL
         } else {
             // toolbar is different, load it
             if (toolbar.getId() != R.id.toolbar) {
+                Log.i(TAG, "Selection mode ended.");
                 ViewGroup chatRoot = (ViewGroup) findViewById(R.id.chat_root);
                 toolbar = (Toolbar) getLayoutInflater().inflate(R.layout.toolbar_chat, chatRoot, false);
                 ImageView toolbarIcon = (ImageView) toolbar.findViewById(R.id.toolbar_icon);
@@ -293,32 +307,50 @@ public class ChatActivity extends AppCompatActivity implements View.OnLongClickL
 
     private void selectSelfMessage(boolean toggle, View messageContent, View chatItem) {
         if (toggle) {
+            Log.i(TAG, "Selected own message '" + ((TextView)messageContent.findViewById(R.id.chat_message_text)).getText() +
+                    "' from '" + ((TextView)messageContent.findViewById(R.id.chat_message_timestamp)).getText() + "'.");
             selectedMessages++;
             messageContent.setBackground(getResources().getDrawable(R.drawable.drawable_chat_item_background_self_sel));
             chatItem.setBackgroundColor(getResources().getColor(R.color.color_chat_item_background_sel));
             chatItem.setTag(R.string.tag_selected, true);
         } else {
+            Log.i(TAG, "Deselected own message '" + ((TextView)messageContent.findViewById(R.id.chat_message_text)).getText() +
+                    "' from '" + ((TextView)messageContent.findViewById(R.id.chat_message_timestamp)).getText() + "'.");
             selectedMessages--;
             messageContent.setBackground(getResources().getDrawable(R.drawable.drawable_chat_item_background_self));
             chatItem.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+            chatItem.setTag(R.string.tag_selected, false);
         }
     }
 
     private void selectOtherMessage(boolean toggle, View messageContent, View chatItem) {
         if (toggle) {
+            Log.i(TAG, "Selected " + (contact.isGroupContact ? ((TextView)messageContent.findViewById(R.id.chat_message_author)).getText() : contact.name) + "'s message '"
+                    + ((TextView)messageContent.findViewById(R.id.chat_message_text)).getText() +
+                    "' from '" + ((TextView)messageContent.findViewById(R.id.chat_message_timestamp)).getText() + "'.");
             selectedMessages++;
             messageContent.setBackground(getResources().getDrawable(R.drawable.drawable_chat_item_background_other_sel));
             chatItem.setBackgroundColor(getResources().getColor(R.color.color_chat_item_background_sel));
             chatItem.setTag(R.string.tag_selected, true);
         } else {
+            Log.i(TAG, "Deselected " + (contact.isGroupContact ? ((TextView)messageContent.findViewById(R.id.chat_message_author)).getText() : contact.name) + "'s message '"
+                    + ((TextView)messageContent.findViewById(R.id.chat_message_text)).getText() +
+                    "' from '" + ((TextView)messageContent.findViewById(R.id.chat_message_timestamp)).getText() + "'.");
             selectedMessages--;
             messageContent.setBackground(getResources().getDrawable(R.drawable.drawable_chat_item_background_other));
             chatItem.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+            chatItem.setTag(R.string.tag_selected, false);
         }
     }
 
     public void onBackButtonClick(View view) {
+        Log.i(TAG, "Left chat activity.");
         finish();
     }
 
+    @Override
+    protected void onStop() {
+        Log.i(TAG, "Left chat activity.");
+        super.onStop();
+    }
 }

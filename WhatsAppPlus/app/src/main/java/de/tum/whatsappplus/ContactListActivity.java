@@ -3,6 +3,7 @@ package de.tum.whatsappplus;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -17,10 +18,13 @@ import java.util.List;
 
 public class ContactListActivity extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener {
 
-    TableLayout table;
-    List<CheckBox> checkBoxList;
+    private static final String TAG = ContactListActivity.class.getName();
+
+    private List<CheckBox> checkBoxList;
 
     private int selectedContacts;
+
+    private boolean loggingSelections = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,13 +34,22 @@ public class ContactListActivity extends AppCompatActivity implements CompoundBu
         checkBoxList = new ArrayList<>();
         String[] preSelectedContacts = getIntent().getStringArrayExtra(Constants.EXTRA_PRE_SELECTED_CONTACTS);
 
+        String selectedContactsConcatString = "";
+        for (String preSelectedContact : preSelectedContacts) {
+            selectedContactsConcatString += preSelectedContact + ", ";
+        }
+        if (!selectedContactsConcatString.isEmpty())
+            Log.i(TAG, "Contact list activity started with pre-selected contacts: " + selectedContactsConcatString.substring(0, selectedContactsConcatString.length() - 2));
+        else
+            Log.i(TAG, "Contact list activity started.");
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("New group");
         getSupportActionBar().setSubtitle("0 selected");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        table = (TableLayout) findViewById(R.id.contactList);
+        TableLayout table = (TableLayout) findViewById(R.id.contactList);
         if (table != null) {
             table.setShowDividers(LinearLayout.SHOW_DIVIDER_MIDDLE);
 
@@ -57,25 +70,37 @@ public class ContactListActivity extends AppCompatActivity implements CompoundBu
                     table.addView(contact_item);
                 }
             }
+            loggingSelections = true;
         }
     }
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        if (isChecked)
+        if (isChecked) {
+            if (loggingSelections) Log.i(TAG, "Selected '" + buttonView.getTag(R.string.tag_checkbox_id) + "'.");
             selectedContacts++;
-        else
+        } else {
+            if (loggingSelections) Log.i(TAG, "Deselected '" + buttonView.getTag(R.string.tag_checkbox_id) + "'.");
             selectedContacts--;
+        }
         getSupportActionBar().setSubtitle(selectedContacts + " selected");
     }
 
     public void onDoneClick(View view) {
         List<String> selectedContacts = new ArrayList<>();
+        String selectedContactsConcatString = "";
         for(CheckBox checkBox : checkBoxList) {
             if (checkBox.isChecked()) {
-                selectedContacts.add((String) checkBox.getTag(R.string.tag_checkbox_id));
+                String contactId = (String) checkBox.getTag(R.string.tag_checkbox_id);
+                selectedContacts.add(contactId);
+                selectedContactsConcatString += contactId + ", ";
             }
         }
+        if (!selectedContactsConcatString.isEmpty())
+            Log.i(TAG, "Clicked on Done in contact list activity with following contacts selected: " + selectedContactsConcatString.substring(0, selectedContactsConcatString.length() - 2));
+        else
+            Log.i(TAG, "Clicked on Done in contact list activity with no selected contacts.");
+
         setResult(RESULT_OK, getIntent().putExtra(Constants.RESULT_SELECTED_CONTACTS, selectedContacts.toArray(new String[selectedContacts.size()])));
         finish();
     }
