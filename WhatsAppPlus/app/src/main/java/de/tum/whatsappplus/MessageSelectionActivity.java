@@ -57,23 +57,23 @@ public class MessageSelectionActivity extends AppCompatActivity implements View.
             Contact contact = Constants.contacts.get(contactId);
 
             // if one of the selected contacts is also the contact we're creating the group chat from
-            if (contactId.equals(chatId)) {
                 List<Message> contactsSelectedMessages = new ArrayList<>();
 
                 // we go through the selected messages (IDs) from ChatActivity with that contact
-                for (String selectedMessage : selectedMessages) {
-                    // ... and through all this contact's chat messages (Message objects)
-                    for (int j = 0; j < contact.chat.size(); j++) {
-                        Message m = contact.chat.get(j);
-                        // if the ID is found, add the message to the selected messages for this contact
-                        if (selectedMessage.equals(m.id)) {
-                            contactsSelectedMessages.add(m);
+                if (selectedMessages != null) {
+                    for (String selectedMessage : selectedMessages) {
+                        // ... and through all this contact's chat messages (Message objects)
+                        for (int j = 0; j < contact.chat.size(); j++) {
+                            Message m = contact.chat.get(j);
+                            // if the ID is found, add the message to the selected messages for this contact
+                            if (selectedMessage.equals(m.id)) {
+                                contactsSelectedMessages.add(m);
+                            }
                         }
                     }
                 }
                 // put the list of selected messages in the map
                 this.selectedMessages.put(contactId, contactsSelectedMessages);
-            }
             if (contact.chat != null && !contact.chat.isEmpty()) {
                 contacts.add(contact.name);
             }
@@ -160,6 +160,8 @@ public class MessageSelectionActivity extends AppCompatActivity implements View.
     }
 
     private List<Message> getGroupMessages() {
+        selectedMessages.put((String) table.getTag(R.string.tag_chat_id), getSelectedMessages());
+
         List<Message> groupMessages = new ArrayList<>();
         groupMessages.add(new Message(Constants.AUTHOR_SYSTEM, "You created group \"" + groupTitle + "\".", Constants.getCurrentTimeStamp()));
         for (String contactId : selectedContacts) {

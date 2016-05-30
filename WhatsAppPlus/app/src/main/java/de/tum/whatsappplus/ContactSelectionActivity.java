@@ -12,6 +12,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +41,8 @@ public class ContactSelectionActivity extends AppCompatActivity {
         Contact fromChat = Constants.contacts.get(chatId);
 
         contacts = new ArrayList<>();
-        contacts.add(fromChat);
+        if (fromChat != null)
+            contacts.add(fromChat);
 
         setContentView(R.layout.activity_contact_selection);
         tableLayout = (TableLayout) findViewById(R.id.tableLayout);
@@ -119,6 +121,11 @@ public class ContactSelectionActivity extends AppCompatActivity {
     }
 
     public void onNextClick(View view) {
+        if (contacts.isEmpty()) {
+            Toast.makeText(this, "At least 1 contact must be selected.", Toast.LENGTH_SHORT).show();
+            Log.i(TAG, "Attempted to create group with no participants.");
+            return;
+        }
         Intent messageSelectionIntent = new Intent(this, MessageSelectionActivity.class);
         String[] selectedContacts = new String[contacts.size()];
         String selectedContactsConcatString = "";

@@ -49,19 +49,19 @@ public class GroupCreationActivity extends AppCompatActivity {
         if (titleLength < 1) {
             Log.i(TAG, "Attempted to create group with no title.");
             Toast.makeText(this, "Please enter a group name", Toast.LENGTH_SHORT).show();
-        } else {
-            Intent openContactSelection = new Intent(this, ContactSelectionActivity.class);
-
-            char[] groupTitleChars = new char[titleLength];
-            groupTitle.getText().getChars(0, titleLength, groupTitleChars, 0);
-            String groupTitleString = new String(groupTitleChars);
-
-            Log.i(TAG, "Clicked on Next in group creation activity with entered group title '" + groupTitleString + "'.");
-            openContactSelection.putExtra(Constants.EXTRA_GROUP_TITLE, groupTitleString);
-            openContactSelection.putExtra(Constants.EXTRA_CHAT_ID, chatId);
-            openContactSelection.putExtra(Constants.EXTRA_PRE_SELECTED_MESSAGES, getIntent().getStringArrayExtra(Constants.EXTRA_PRE_SELECTED_MESSAGES));
-
-            startActivity(openContactSelection);
+            return;
         }
+        Intent openContactSelection = new Intent(this, ContactSelectionActivity.class);
+
+        char[] groupTitleChars = new char[titleLength];
+        groupTitle.getText().getChars(0, titleLength, groupTitleChars, 0);
+        String groupTitleString = new String(groupTitleChars);
+
+        Log.i(TAG, "Clicked on Next in group creation activity with entered group title '" + groupTitleString + "'.");
+        openContactSelection.putExtra(Constants.EXTRA_GROUP_TITLE, groupTitleString);
+        openContactSelection.putExtra(Constants.EXTRA_CHAT_ID, chatId);
+        openContactSelection.putExtra(Constants.EXTRA_PRE_SELECTED_MESSAGES, getIntent().getStringArrayExtra(Constants.EXTRA_PRE_SELECTED_MESSAGES));
+
+        startActivity(openContactSelection);
     }
 }

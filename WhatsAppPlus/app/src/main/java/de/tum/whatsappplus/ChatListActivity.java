@@ -7,6 +7,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -83,6 +84,11 @@ public class ChatListActivity extends AppCompatActivity {
         Intent openChat = new Intent(this, ChatActivity.class);
         openChat.putExtra(Constants.EXTRA_CHAT_ID, (String) view.getTag(R.string.tag_chat_id));
         startActivity(openChat);
+    }
+
+    public void onNewGroupClick(MenuItem item) {
+        Intent newGroupIntent = new Intent(this, GroupCreationActivity.class);
+        startActivity(newGroupIntent);
     }
 
     @Override
