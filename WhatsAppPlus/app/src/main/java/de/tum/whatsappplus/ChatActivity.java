@@ -26,6 +26,8 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class ChatActivity extends AppCompatActivity implements View.OnLongClickListener, View.OnClickListener {
 
@@ -58,9 +60,9 @@ public class ChatActivity extends AppCompatActivity implements View.OnLongClickL
         Log.i(TAG, "Chat activity for '" + chatId + "' started.");
 
         isGroupChat = Constants.CHAT_TYPE_GROUP.equals(chatType);
+        String contactsConcatString = "";
         if (isGroupChat) {
             String[] contacts = intent.getStringArrayExtra(Constants.EXTRA_CONTACTS_ID);
-            String contactsConcatString = "";
             for (String contact : contacts) {
                 contactsConcatString += contact + ", ";
             }
@@ -89,14 +91,14 @@ public class ChatActivity extends AppCompatActivity implements View.OnLongClickL
             }
         });
 
-        if (table != null) {
-            getSupportActionBar().setTitle(contact.name);
-            for (Message message : contact.chat) {
-                addNewChatMessage(message);
-            }
+        if (isGroupChat) {
+            TextView toolbarSubtitle = (TextView) toolbar.findViewById(R.id.toolbar_subtitle);
+            toolbarSubtitle.setText(contactsConcatString + "You");
+            toolbarSubtitle.setVisibility(View.VISIBLE);
         }
-
-        table.requestFocus();
+        for (Message message : contact.chat) {
+            addNewChatMessage(message);
+        }
 
         chatInputEditText = (EditText) findViewById(R.id.chat_input_edittext);
         if (chatInputEditText != null) {
@@ -128,50 +130,55 @@ public class ChatActivity extends AppCompatActivity implements View.OnLongClickL
         super.onSaveInstanceState(outState);
     }
 
-    private void addNewChatMessage(Message message) {
-        View chatItem;
-        if (Constants.AUTHOR_SYSTEM.equals(message.author)) {
-            chatItem = getLayoutInflater().inflate(R.layout.view_chat_item_system, table, false);
-        } else {
-            if (contact.isGroupContact && !Constants.AUTHOR_SELF.equals(message.author)) {
-                chatItem = getLayoutInflater().inflate(R.layout.view_chat_item_group, table, false);
-                TextView chatAuthorTextView = (TextView) chatItem.findViewById(R.id.chat_message_author);
-                chatAuthorTextView.setText(message.author);
-                chatAuthorTextView.setTextColor(Constants.contacts.get(message.author).color);
-            } else {
-                chatItem = getLayoutInflater().inflate(R.layout.view_chat_item, table, false);
+    private void addNewChatMessage(final Message message) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                View chatItem;
+                if (Constants.AUTHOR_SYSTEM.equals(message.author)) {
+                    chatItem = getLayoutInflater().inflate(R.layout.view_chat_item_system, table, false);
+                } else {
+                    if (contact.isGroupContact && !Constants.AUTHOR_SELF.equals(message.author)) {
+                        chatItem = getLayoutInflater().inflate(R.layout.view_chat_item_group, table, false);
+                        TextView chatAuthorTextView = (TextView) chatItem.findViewById(R.id.chat_message_author);
+                        chatAuthorTextView.setText(message.author);
+                        chatAuthorTextView.setTextColor(Constants.contacts.get(message.author).color);
+                    } else {
+                        chatItem = getLayoutInflater().inflate(R.layout.view_chat_item, table, false);
+                    }
+                    ((TextView) chatItem.findViewById(R.id.chat_message_timestamp)).setText(message.timeStamp);
+                }
+                ((TextView) chatItem.findViewById(R.id.chat_message_text)).setText(message.text);
+
+                View chatMessageContent = chatItem.findViewById(R.id.chat_message_content);
+
+                TableLayout.LayoutParams chatItemLayoutParams = (TableLayout.LayoutParams) chatItem.getLayoutParams();
+                chatItemLayoutParams.topMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, Constants.MESSAGE_MARGIN_TOP, getResources().getDisplayMetrics());
+
+                LinearLayout.LayoutParams chatMessageContentLayoutParams = (LinearLayout.LayoutParams) chatMessageContent.getLayoutParams();
+
+                if (Constants.AUTHOR_SELF.equals(message.author)) {
+                    chatMessageContentLayoutParams.leftMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 80, getResources().getDisplayMetrics());
+                    chatMessageContentLayoutParams.rightMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, getResources().getDisplayMetrics());
+                    chatMessageContent.setBackground(getResources().getDrawable(R.drawable.drawable_chat_item_background_self));
+                } else if (!Constants.AUTHOR_SYSTEM.equals(message.author)){
+                    chatMessageContentLayoutParams.leftMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, getResources().getDisplayMetrics());
+                    chatMessageContentLayoutParams.rightMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 80, getResources().getDisplayMetrics());
+                    chatMessageContent.setBackground(getResources().getDrawable(R.drawable.drawable_chat_item_background_other));
+                }
+
+                chatItem.setTag(R.string.tag_chat_message, message);
+                chatItem.setTag(R.string.tag_selected, false);
+                if (!Constants.AUTHOR_SYSTEM.equals(message.author)) {
+                    chatMessageContent.setOnLongClickListener(ChatActivity.this);
+                    chatMessageContent.setOnClickListener(ChatActivity.this);
+                }
+
+                chatMessageContent.setLayoutParams(chatMessageContentLayoutParams);
+
+                table.addView(chatItem, chatItemLayoutParams);
             }
-            ((TextView) chatItem.findViewById(R.id.chat_message_timestamp)).setText(message.timeStamp);
-        }
-        ((TextView) chatItem.findViewById(R.id.chat_message_text)).setText(message.text);
-
-        View chatMessageContent = chatItem.findViewById(R.id.chat_message_content);
-
-        TableLayout.LayoutParams chatItemLayoutParams = (TableLayout.LayoutParams) chatItem.getLayoutParams();
-        chatItemLayoutParams.topMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, Constants.MESSAGE_MARGIN_TOP, getResources().getDisplayMetrics());
-
-        LinearLayout.LayoutParams chatMessageContentLayoutParams = (LinearLayout.LayoutParams) chatMessageContent.getLayoutParams();
-
-        if (Constants.AUTHOR_SELF.equals(message.author)) {
-            chatMessageContentLayoutParams.leftMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 80, getResources().getDisplayMetrics());
-            chatMessageContentLayoutParams.rightMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, getResources().getDisplayMetrics());
-            chatMessageContent.setBackground(getResources().getDrawable(R.drawable.drawable_chat_item_background_self));
-        } else if (!Constants.AUTHOR_SYSTEM.equals(message.author)){
-            chatMessageContentLayoutParams.leftMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, getResources().getDisplayMetrics());
-            chatMessageContentLayoutParams.rightMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 80, getResources().getDisplayMetrics());
-            chatMessageContent.setBackground(getResources().getDrawable(R.drawable.drawable_chat_item_background_other));
-        }
-
-        chatItem.setTag(R.string.tag_chat_message, message);
-        chatItem.setTag(R.string.tag_selected, false);
-        if (!Constants.AUTHOR_SYSTEM.equals(message.author)) {
-            chatMessageContent.setOnLongClickListener(this);
-            chatMessageContent.setOnClickListener(this);
-        }
-
-        chatMessageContent.setLayoutParams(chatMessageContentLayoutParams);
-
-        table.addView(chatItem, chatItemLayoutParams);
+        });
     }
 
     @Override
@@ -180,8 +187,12 @@ public class ChatActivity extends AppCompatActivity implements View.OnLongClickL
         MenuInflater inflater = getMenuInflater();
         if (toolbar.getId() == R.id.toolbar_selectionmode)
             inflater.inflate(R.menu.menu_chat_selectionmode, menu);
-        else
-            inflater.inflate(R.menu.menu_chat, menu);
+        else {
+            if (isGroupChat)
+                inflater.inflate(R.menu.menu_chat_group, menu);
+            else
+                inflater.inflate(R.menu.menu_chat, menu);
+        }
 
         return true;
     }
@@ -204,6 +215,8 @@ public class ChatActivity extends AppCompatActivity implements View.OnLongClickL
             }
 
             editable.clear();
+
+            getReaction(messageText);
         }
     }
 
@@ -340,6 +353,36 @@ public class ChatActivity extends AppCompatActivity implements View.OnLongClickL
             messageContent.setBackground(getResources().getDrawable(R.drawable.drawable_chat_item_background_other));
             chatItem.setBackgroundColor(getResources().getColor(android.R.color.transparent));
             chatItem.setTag(R.string.tag_selected, false);
+        }
+    }
+
+    private void getReaction(String messageText) {
+        final String reactionMessageText;
+        if (messageText.toLowerCase().matches(".*(lust.*grillen).*|.*(grillen.*lust).*")) {
+            reactionMessageText = "Ja, das hört sich gut an :)";
+        } else if (messageText.toLowerCase().matches(".*(michi.*einladen).*|.*(einladen.*michi).*")) {
+            reactionMessageText = "Ok, aber dann soll auch Maria kommen!";
+        } else if (messageText.toLowerCase().matches(".*(wann.*treffen).*|.*(treffen.*wann).*")) {
+            reactionMessageText = "Sagen wir um 15 Uhr?";
+        } else if (messageText.toLowerCase().matches(".*(abgemacht.*gruppe).*|.*(gruppe.*abgemacht).*")) {
+            reactionMessageText = "Ja :D";
+        } else {
+            reactionMessageText = "";
+        }
+
+        if (!reactionMessageText.isEmpty()) {
+            new Timer().schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    Message message = new Message(contact.name, reactionMessageText, Constants.getCurrentTimeStamp());
+
+                    addNewChatMessage(message);
+
+                    if (contact != null) {
+                        contact.chat.add(message);
+                    }
+                }
+            }, 3000);
         }
     }
 
