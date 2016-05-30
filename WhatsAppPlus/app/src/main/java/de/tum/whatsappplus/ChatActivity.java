@@ -3,7 +3,6 @@ package de.tum.whatsappplus;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -25,8 +24,6 @@ import android.widget.ScrollView;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
-import java.util.Calendar;
-
 public class ChatActivity extends AppCompatActivity implements View.OnLongClickListener, View.OnClickListener {
 
     private static final String TAG = ChatActivity.class.getName();
@@ -46,12 +43,20 @@ public class ChatActivity extends AppCompatActivity implements View.OnLongClickL
         Log.d(TAG, "onCreate called with " + savedInstanceState);
 
         Intent intent = getIntent();
-        String chatType = intent.getStringExtra(Constants.EXTRA_CHAT_TYPE);
+        String chatType, chatId;
+
+        if (savedInstanceState == null) {
+            chatType = intent.getStringExtra(Constants.EXTRA_CHAT_TYPE);
+            chatId = intent.getStringExtra(Constants.EXTRA_CHAT_ID);
+        } else {
+            chatType = savedInstanceState.getString(Constants.EXTRA_CHAT_TYPE);
+            chatId = savedInstanceState.getString(Constants.EXTRA_CHAT_ID);
+        }
+
         isGroupChat = Constants.CHAT_TYPE_GROUP.equals(chatType);
         if (isGroupChat) {
             String[] contacts = intent.getStringArrayExtra(Constants.EXTRA_CONTACTS_ID);
         }
-        String chatId = intent.getStringExtra(Constants.EXTRA_CHAT_ID);
         contact = Constants.contacts.get(chatId);
 
         setContentView(R.layout.activity_chat);
@@ -107,10 +112,29 @@ public class ChatActivity extends AppCompatActivity implements View.OnLongClickL
         }
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putString(Constants.EXTRA_CHAT_TYPE, isGroupChat ? Constants.CHAT_TYPE_GROUP : "");
+        outState.putString(Constants.EXTRA_CHAT_ID, contact.name);
+        super.onSaveInstanceState(outState);
+    }
+
     private void addNewChatMessage(Message message) {
-        View chatItem = getLayoutInflater().inflate(R.layout.view_chat_item, table, false);
+        View chatItem;
+        if (Constants.AUTHOR_SYSTEM.equals(message.author)) {
+            chatItem = getLayoutInflater().inflate(R.layout.view_chat_item_system, table, false);
+        } else {
+            if (contact.isGroupContact && !Constants.AUTHOR_SELF.equals(message.author)) {
+                chatItem = getLayoutInflater().inflate(R.layout.view_chat_item_group, table, false);
+                TextView chatAuthorTextView = (TextView) chatItem.findViewById(R.id.chat_author);
+                chatAuthorTextView.setText(message.author);
+                chatAuthorTextView.setTextColor(Constants.contacts.get(message.author).color);
+            } else {
+                chatItem = getLayoutInflater().inflate(R.layout.view_chat_item, table, false);
+            }
+            ((TextView) chatItem.findViewById(R.id.chat_timestamp)).setText(message.timeStamp);
+        }
         ((TextView) chatItem.findViewById(R.id.chat_message)).setText(message.text);
-        ((TextView) chatItem.findViewById(R.id.chat_timestamp)).setText(message.timeStamp);
 
         View chatMessageContent = chatItem.findViewById(R.id.chat_message_content);
 
@@ -119,19 +143,21 @@ public class ChatActivity extends AppCompatActivity implements View.OnLongClickL
 
         LinearLayout.LayoutParams chatMessageContentLayoutParams = (LinearLayout.LayoutParams) chatMessageContent.getLayoutParams();
 
-        if (message.author.equals("self")) {
+        if (Constants.AUTHOR_SELF.equals(message.author)) {
             chatMessageContentLayoutParams.leftMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 80, getResources().getDisplayMetrics());
             chatMessageContentLayoutParams.rightMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, getResources().getDisplayMetrics());
             chatMessageContent.setBackground(getResources().getDrawable(R.drawable.drawable_chat_item_background_self));
-        } else {
+        } else if (!Constants.AUTHOR_SYSTEM.equals(message.author)){
             chatMessageContentLayoutParams.leftMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, getResources().getDisplayMetrics());
             chatMessageContentLayoutParams.rightMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 80, getResources().getDisplayMetrics());
             chatMessageContent.setBackground(getResources().getDrawable(R.drawable.drawable_chat_item_background_other));
         }
 
         chatItem.setTag(R.string.tag_chat_message, message);
-        chatMessageContent.setOnLongClickListener(this);
-        chatMessageContent.setOnClickListener(this);
+        if (!Constants.AUTHOR_SYSTEM.equals(message.author)) {
+            chatMessageContent.setOnLongClickListener(this);
+            chatMessageContent.setOnClickListener(this);
+        }
 
         chatMessageContent.setLayoutParams(chatMessageContentLayoutParams);
 
@@ -157,10 +183,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnLongClickL
             editable.getChars(0, editable.length(), messageTextChars, 0);
             String messageText = new String(messageTextChars);
 
-            Calendar cal = Calendar.getInstance();
-            String timeStampString = cal.get(Calendar.HOUR_OF_DAY) + ":" + cal.get(Calendar.MINUTE);
-
-            Message message = new Message("self", messageText, timeStampString);
+            Message message = new Message(Constants.AUTHOR_SELF, messageText, Constants.getCurrentTimeStamp());
 
             addNewChatMessage(message);
 
@@ -200,10 +223,12 @@ public class ChatActivity extends AppCompatActivity implements View.OnLongClickL
         View chatItem = (View) messageContent.getParent();
         Message message = (Message) chatItem.getTag(R.string.tag_chat_message);
         boolean chatItemSelected = message.selected;
-        if ("self".equals(message.author)) {
+        if (Constants.AUTHOR_SELF.equals(message.author)) {
             selectSelfMessage(!chatItemSelected, messageContent, chatItem);
-        } else {
+        } else if (!Constants.AUTHOR_SYSTEM.equals(message.author)){
             selectOtherMessage(!chatItemSelected, messageContent, chatItem);
+        } else {
+            return;
         }
 
         message.selected = !message.selected;

@@ -35,7 +35,7 @@ public class MessageSelectionActivity extends AppCompatActivity implements View.
         List<String> contacts = new ArrayList<>();
         for(String contact : selectedContacts) {
             Contact c = Constants.contacts.get(contact);
-            if(c.chat != null) {
+            if(c.chat != null && !c.chat.isEmpty()) {
                 contacts.add(c.name);
             }
         }
@@ -59,7 +59,7 @@ public class MessageSelectionActivity extends AppCompatActivity implements View.
                 for(Message m : messages) {
                     View messageView = addNewChatMessage(m);
                     if(m.selected) {
-                        if(m.author.equals("self")) {
+                        if(m.author.equals(Constants.AUTHOR_SELF)) {
                             selectSelfMessage(true, messageView);
                         } else {
                             selectOtherMessage(true, messageView);
@@ -80,8 +80,7 @@ public class MessageSelectionActivity extends AppCompatActivity implements View.
 
 
     public void onCreateClick(View view) {
-        List<Message> groupMessages = new ArrayList<>();
-        Constants.contacts.put(groupTitle, new Contact(groupTitle, groupIcon, groupMessages));
+        Constants.contacts.put(groupTitle, new Contact(groupTitle, groupIcon, getGroupMessages(), true));
 
         Intent startGroupChatActivity = new Intent(this, ChatActivity.class);
         startGroupChatActivity.putExtra(Constants.EXTRA_CHAT_TYPE, Constants.CHAT_TYPE_GROUP);
@@ -89,6 +88,21 @@ public class MessageSelectionActivity extends AppCompatActivity implements View.
         startGroupChatActivity.putExtra(Constants.EXTRA_CONTACTS_ID, selectedContacts);
         startGroupChatActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(startGroupChatActivity);
+    }
+
+    private List<Message> getGroupMessages() {
+        List<Message> groupMessages = new ArrayList<>();
+        groupMessages.add(new Message(Constants.AUTHOR_SYSTEM, "You created group \"" + groupTitle + "\".", Constants.getCurrentTimeStamp()));
+        for (String contactId : selectedContacts) {
+            Contact selectedContact = Constants.contacts.get(contactId);
+            for (Message message : selectedContact.chat) {
+                if (message.selected) {
+                    groupMessages.add(message);
+                }
+            }
+        }
+        groupMessages.add(new Message(Constants.AUTHOR_SYSTEM, "Previous messages from group creator's private chat.\nGroup chat begins here:", Constants.getCurrentTimeStamp()));
+        return groupMessages;
     }
 
     private View addNewChatMessage(Message message) {
@@ -103,7 +117,7 @@ public class MessageSelectionActivity extends AppCompatActivity implements View.
 
         LinearLayout.LayoutParams chatMessageContentLayoutParams = (LinearLayout.LayoutParams) chatMessageContent.getLayoutParams();
 
-        if (message.author.equals("self")) {
+        if (Constants.AUTHOR_SELF.equals(message.author)) {
             chatMessageContentLayoutParams.leftMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 80, getResources().getDisplayMetrics());
             chatMessageContentLayoutParams.rightMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, getResources().getDisplayMetrics());
             chatMessageContent.setBackground(getResources().getDrawable(R.drawable.drawable_chat_item_background_self));
@@ -131,7 +145,7 @@ public class MessageSelectionActivity extends AppCompatActivity implements View.
         View chatItem = (View) messageContent.getParent();
         Message message = (Message) chatItem.getTag(R.string.tag_chat_message);
         boolean chatItemSelected = message.selected;
-        if ("self".equals(message.author)) {
+        if (Constants.AUTHOR_SELF.equals(message.author)) {
             selectSelfMessage(!chatItemSelected, chatItem);
         } else {
             selectOtherMessage(!chatItemSelected, chatItem);

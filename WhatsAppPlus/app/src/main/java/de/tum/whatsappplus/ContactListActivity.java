@@ -42,18 +42,20 @@ public class ContactListActivity extends AppCompatActivity implements CompoundBu
 
             for (String contactId : Constants.contacts.keySet()) {
                 Contact contact = Constants.contacts.get(contactId);
-                View contact_item = getLayoutInflater().inflate(R.layout.view_contact_item, table, false);
-                ((ImageView) contact_item.findViewById(R.id.chat_icon)).setImageResource(contact.imageID);
-                ((TextView) contact_item.findViewById(R.id.chat_name)).setText(contact.name);
-                List<String> preSelectedContactsList = Arrays.asList(preSelectedContacts);
-                CheckBox checkBox = (CheckBox) contact_item.findViewById(R.id.checkBox);
-                checkBox.setOnCheckedChangeListener(this);
-                checkBox.setTag(R.string.tag_checkbox_id, contact.name);
-                if (preSelectedContactsList.contains(contact.name)) {
-                    checkBox.setChecked(true);
+                if (!contact.isGroupContact) {
+                    View contact_item = getLayoutInflater().inflate(R.layout.view_contact_item, table, false);
+                    ((ImageView) contact_item.findViewById(R.id.chat_icon)).setImageResource(contact.imageID);
+                    ((TextView) contact_item.findViewById(R.id.chat_name)).setText(contact.name);
+                    List<String> preSelectedContactsList = Arrays.asList(preSelectedContacts);
+                    CheckBox checkBox = (CheckBox) contact_item.findViewById(R.id.checkBox);
+                    checkBox.setOnCheckedChangeListener(this);
+                    checkBox.setTag(R.string.tag_checkbox_id, contact.name);
+                    if (preSelectedContactsList.contains(contact.name)) {
+                        checkBox.setChecked(true);
+                    }
+                    checkBoxList.add(checkBox);
+                    table.addView(contact_item);
                 }
-                checkBoxList.add(checkBox);
-                table.addView(contact_item);
             }
         }
     }

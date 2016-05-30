@@ -13,6 +13,8 @@
     <color name="color_chat_item_background_sel">#abd3e1</color>
     <color name="color_chat_message_background_self_sel">#ace9d0</color>
     <color name="color_chat_message_background_other_sel">#c1e9f7</color>
+    <color name="color_chat_system_message">#d4eaf4</color>
+    <color name="color_chat_system_message_text">#555e62</color>
     <color name="color_chat_message_input">#000000</color>
     <color name="color_group_vertical_divider">#6a9e98</color>
     <color name="color_delete_grey">#9b9b9b</color>

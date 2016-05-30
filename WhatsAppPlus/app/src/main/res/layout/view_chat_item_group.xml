@@ -18,13 +18,23 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="Magda"
+            android:id="@+id/chat_author"
+            android:textColor="@android:color/holo_red_dark"
+            android:textStyle="bold"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="4dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:text="Hallo. Mein Name ist Test Item. Wie geht es dir? Mir geht es gut."
             android:id="@+id/chat_message"
             android:textColor="@color/color_chatlist_chat_name"
             android:layout_marginLeft="8dp"
-            android:layout_marginTop="4dp"
             android:layout_marginRight="8dp"
-            android:layout_marginBottom="4dp" />
+            android:layout_marginBottom="4dp"
+            android:layout_marginTop="4dp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -36,4 +46,5 @@
             android:layout_marginBottom="5dp"
             android:textSize="11sp" />
     </LinearLayout>
+
 </LinearLayout>

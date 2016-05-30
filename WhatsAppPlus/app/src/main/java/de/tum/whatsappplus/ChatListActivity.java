@@ -13,6 +13,8 @@ import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
+import java.util.List;
+
 public class ChatListActivity extends AppCompatActivity {
 
     private static final String TAG = ChatListActivity.class.getName();
@@ -25,25 +27,6 @@ public class ChatListActivity extends AppCompatActivity {
 //        getLayoutInflater().inflate(R.layout.toolbar, (ViewGroup) findViewById(R.id.chat_list_root), true);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        TableLayout table = (TableLayout) findViewById(R.id.chat_list_table);
-        if (table != null) {
-            table.setShowDividers(LinearLayout.SHOW_DIVIDER_MIDDLE);
-
-            for (String key : Constants.contacts.keySet()) {
-                Contact c = Constants.contacts.get(key);
-                if (c.chat == null) continue;
-
-                View chat1 = getLayoutInflater().inflate(R.layout.view_chat_history_item, table, false);
-                ((ImageView) chat1.findViewById(R.id.chat_icon)).setImageResource(c.imageID);
-                ((TextView) chat1.findViewById(R.id.chat_name)).setText(c.name);
-                ((TextView) chat1.findViewById(R.id.chat_history_last)).setText(c.chat.get(c.chat.size()-1).text);
-                ((TextView) chat1.findViewById(R.id.chat_timestamp)).setText(c.chat.get(c.chat.size()-1).timeStamp);
-                chat1.setTag(R.string.tag_chat_id, c.name);
-
-                table.addView(chat1);
-            }
-        }
     }
 
     @Override
@@ -51,13 +34,36 @@ public class ChatListActivity extends AppCompatActivity {
         super.onResume();
 
         TableLayout table = (TableLayout) findViewById(R.id.chat_list_table);
-        for (int i = 0; i < table.getChildCount(); i++) {
-            View chat1 = table.getChildAt(i);
-            String chatId = (String) chat1.getTag(R.string.tag_chat_id);
-            Contact contact = Constants.contacts.get(chatId);
-            ((TextView) chat1.findViewById(R.id.chat_history_last)).setText(contact.chat.get(contact.chat.size()-1).text);
-            ((TextView) chat1.findViewById(R.id.chat_timestamp)).setText(contact.chat.get(contact.chat.size()-1).timeStamp);
+        if (table != null) {
+            table.removeAllViews();
+            table.setShowDividers(LinearLayout.SHOW_DIVIDER_MIDDLE);
+
+            for (String key : Constants.contacts.keySet()) {
+                Contact c = Constants.contacts.get(key);
+                if (c.chat == null || c.chat.isEmpty()) continue;
+
+                View chat1 = getLayoutInflater().inflate(R.layout.view_chat_history_item, table, false);
+                ((ImageView) chat1.findViewById(R.id.chat_icon)).setImageResource(c.imageID);
+                ((TextView) chat1.findViewById(R.id.chat_name)).setText(c.name);
+                Message lastMessage = getLastMessage(c.chat);
+                ((TextView) chat1.findViewById(R.id.chat_history_last)).setText(lastMessage.text);
+                ((TextView) chat1.findViewById(R.id.chat_timestamp)).setText(lastMessage.timeStamp);
+                chat1.setTag(R.string.tag_chat_id, c.name);
+
+                table.addView(chat1);
+            }
         }
+    }
+
+    private Message getLastMessage(List<Message> chat) {
+        int i = chat.size() - 1;
+        Message message = chat.get(i);
+        while (Constants.AUTHOR_SYSTEM.equals(message.author)) {
+            if (i == 0)
+                return new Message(Constants.AUTHOR_SYSTEM, "", message.timeStamp);
+            message = chat.get(--i);
+        }
+        return message;
     }
 
     @Override
