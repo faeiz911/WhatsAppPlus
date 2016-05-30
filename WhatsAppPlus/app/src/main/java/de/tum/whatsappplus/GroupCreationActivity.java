@@ -8,6 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class GroupCreationActivity extends AppCompatActivity {
 
@@ -43,9 +44,19 @@ public class GroupCreationActivity extends AppCompatActivity {
     }
 
     public void onNextClick(View view) {
-        Intent openContactSelection = new Intent(this, ContactSelectionActivity.class);
-        openContactSelection.putExtra("groupTitle", groupTitle.getText());
-        openContactSelection.putExtra(Constants.EXTRA_CHAT_ID, chat_id);
-        startActivity(openContactSelection);
+        int titleLength = groupTitle.getText().length();
+        if (titleLength < 1) {
+            Toast.makeText(this, "Please enter a group name", Toast.LENGTH_SHORT).show();
+        } else {
+            Intent openContactSelection = new Intent(this, ContactSelectionActivity.class);
+
+            char[] groupTitleChars = new char[titleLength];
+            groupTitle.getText().getChars(0, titleLength, groupTitleChars, 0);
+            openContactSelection.putExtra(Constants.EXTRA_GROUP_TITLE, new String(groupTitleChars));
+
+            openContactSelection.putExtra(Constants.EXTRA_CHAT_ID, chat_id);
+
+            startActivity(openContactSelection);
+        }
     }
 }

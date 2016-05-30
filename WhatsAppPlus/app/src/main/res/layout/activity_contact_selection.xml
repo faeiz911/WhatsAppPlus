@@ -29,7 +29,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/contactName"
-                android:hint="@string/contact_selection_hint" />
+                android:hint="@string/contact_selection_hint"
+                android:enabled="false" />
 
             <ImageButton
                 android:layout_width="wrap_content"
@@ -41,7 +42,7 @@
                 android:background="@android:color/transparent"
                 android:contentDescription="@string/description_add_contact_button"
                 android:baselineAlignBottom="false"
-                android:onClick="openContacts"
+                android:onClick="onAddContactsClick"
                 android:tint="@color/color_add_button" />
         </RelativeLayout>
 

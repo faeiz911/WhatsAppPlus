@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
@@ -16,26 +15,22 @@ import android.widget.TableLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class MessageSelectionActivity extends AppCompatActivity implements View.OnClickListener {
 
     private String[] selectedContacts;
     private String groupTitle;
-    private Spinner contactSpinner;
+    private int groupIcon;
     private TableLayout table;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_message_selection);
-        selectedContacts = getIntent().getStringArrayExtra(Constants.EXTRA_CONTACTS_ID);
-        groupTitle = getIntent().getStringExtra("groupTitle");
-        table = (TableLayout) findViewById(R.id.messageList);
 
-        contactSpinner = (Spinner) findViewById(R.id.contactSpinner);
-        contactSpinner.getBackground().setColorFilter(getResources().getColor(android.R.color.white), PorterDuff.Mode.SRC_ATOP);
+        selectedContacts = getIntent().getStringArrayExtra(Constants.EXTRA_CONTACTS_ID);
+        groupTitle = getIntent().getStringExtra(Constants.EXTRA_GROUP_TITLE);
+        groupIcon = getIntent().getIntExtra(Constants.EXTRA_GROUP_ICON, R.drawable.whatsappplus_icon_group);
 
         List<String> contacts = new ArrayList<>();
         for(String contact : selectedContacts) {
@@ -44,7 +39,15 @@ public class MessageSelectionActivity extends AppCompatActivity implements View.
                 contacts.add(c.name);
             }
         }
-        ArrayAdapter<String > adapter = new ArrayAdapter<String>(this, R.layout.spinner_item, contacts.toArray(new String[contacts.size()]));
+
+        setContentView(R.layout.activity_message_selection);
+
+        table = (TableLayout) findViewById(R.id.messageList);
+
+        Spinner contactSpinner = (Spinner) findViewById(R.id.contactSpinner);
+        contactSpinner.getBackground().setColorFilter(getResources().getColor(android.R.color.white), PorterDuff.Mode.SRC_ATOP);
+
+        ArrayAdapter<String > adapter = new ArrayAdapter<>(this, R.layout.spinner_item, contacts.toArray(new String[contacts.size()]));
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         contactSpinner.setAdapter(adapter);
         contactSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -66,9 +69,7 @@ public class MessageSelectionActivity extends AppCompatActivity implements View.
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parentView) {
-                return;
-            }
+            public void onNothingSelected(AdapterView<?> parentView) {}
         });
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -79,9 +80,12 @@ public class MessageSelectionActivity extends AppCompatActivity implements View.
 
 
     public void onCreateClick(View view) {
+        List<Message> groupMessages = new ArrayList<>();
+        Constants.contacts.put(groupTitle, new Contact(groupTitle, groupIcon, groupMessages));
+
         Intent startGroupChatActivity = new Intent(this, ChatActivity.class);
-        startGroupChatActivity.putExtra(Constants.EXTRA_CHAT_TYPE, "group");
-        startGroupChatActivity.putExtra(Constants.EXTRA_GROUP_TITLE, groupTitle);
+        startGroupChatActivity.putExtra(Constants.EXTRA_CHAT_TYPE, Constants.CHAT_TYPE_GROUP);
+        startGroupChatActivity.putExtra(Constants.EXTRA_CHAT_ID, groupTitle);
         startGroupChatActivity.putExtra(Constants.EXTRA_CONTACTS_ID, selectedContacts);
         startGroupChatActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(startGroupChatActivity);

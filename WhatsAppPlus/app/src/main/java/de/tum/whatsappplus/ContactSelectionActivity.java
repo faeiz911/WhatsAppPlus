@@ -19,22 +19,26 @@ import java.util.List;
 public class ContactSelectionActivity extends AppCompatActivity {
 
     private static final String TAG = ContactSelectionActivity.class.getName();
+    private static final int SELECT_CONTACTS_REQUEST_CODE = 1337;
+
     private TableLayout tableLayout;
-    private EditText contactName;
     private String groupTitle;
     private List<Contact> contacts;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Contact fromChat = Constants.contacts.get(getIntent().getStringExtra(Constants.EXTRA_CHAT_ID));
+        groupTitle = getIntent().getStringExtra(Constants.EXTRA_GROUP_TITLE);
+
+        contacts = new ArrayList<>();
+        contacts.add(fromChat);
+
         setContentView(R.layout.activity_contact_selection);
         tableLayout = (TableLayout) findViewById(R.id.tableLayout);
-        contactName = (EditText) findViewById(R.id.contactName);
-        contactName.getBackground().mutate().setColorFilter(getResources().getColor(R.color.color_add_button), PorterDuff.Mode.SRC_ATOP);
-        contacts = new ArrayList<>();
-        Contact fromChat = Constants.contacts.get(getIntent().getStringExtra(Constants.EXTRA_CHAT_ID));
-        contacts.add(fromChat);
-        groupTitle = getIntent().getStringExtra("groupTitle");
+        EditText contactNameEditText = (EditText) findViewById(R.id.contactName);
+        contactNameEditText.getBackground().mutate().setColorFilter(getResources().getColor(R.color.color_add_button), PorterDuff.Mode.SRC_ATOP);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -62,12 +66,12 @@ public class ContactSelectionActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         Log.d(TAG, "onActivityResult called with reqc=" + requestCode + " resc=" + resultCode + " data=" + data);
         List<Contact> newContacts = new ArrayList<>();
-        String[] selectedContacts = data.getStringArrayExtra("de.tum.whatsappplus.SelectedContacts");
-        if(requestCode == 1337 && resultCode == RESULT_OK) {
-            for(String key : Constants.contacts.keySet()) {
+        String[] selectedContacts = data.getStringArrayExtra(Constants.RESULT_SELECTED_CONTACTS);
+        if (requestCode == SELECT_CONTACTS_REQUEST_CODE && resultCode == RESULT_OK) {
+            for (String key : Constants.contacts.keySet()) {
                 Contact c = Constants.contacts.get(key);
-                for(String contactName : selectedContacts) {
-                    if(contactName.equals(c.name)) {
+                for (String contactName : selectedContacts) {
+                    if (contactName.equals(c.name)) {
                         newContacts.add(c);
                     }
                 }
@@ -76,16 +80,16 @@ public class ContactSelectionActivity extends AppCompatActivity {
         }
     }
 
-    public void openContacts(View view) {
+    public void onAddContactsClick(View view) {
         Log.d(TAG, "clicked on " + view.getTag(R.string.tag_chat_id));
-        Intent contactSelection = new Intent(this, ContactListActivity.class);
+        Intent contactSelectionIntent = new Intent(this, ContactListActivity.class);
         String[] stringArray = new String[contacts.size()];
-        for(int i=0; i < contacts.size(); i++) {
+        for (int i = 0; i < contacts.size(); i++) {
             stringArray[i] = contacts.get(i).name;
         }
 
-        contactSelection.putExtra("nameArray", stringArray);
-        startActivityForResult(contactSelection, 1337);
+        contactSelectionIntent.putExtra(Constants.EXTRA_PRE_SELECTED_CONTACTS, stringArray);
+        startActivityForResult(contactSelectionIntent, SELECT_CONTACTS_REQUEST_CODE);
     }
 
     public void removeContact(View view) {
@@ -107,7 +111,7 @@ public class ContactSelectionActivity extends AppCompatActivity {
             selectedContacts[i] = contacts.get(i).name;
         }
         messageSelectionIntent.putExtra(Constants.EXTRA_CONTACTS_ID, selectedContacts);
-        messageSelectionIntent.putExtra("groupTitle", groupTitle);
+        messageSelectionIntent.putExtra(Constants.EXTRA_GROUP_TITLE, groupTitle);
         startActivity(messageSelectionIntent);
     }
 

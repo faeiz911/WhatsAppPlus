@@ -6,10 +6,10 @@ import java.util.List;
 public class Contact {
     public String name;
     public int imageID;
-    public ArrayList<Message> chat;
+    public List<Message> chat;
     public int selectedMessagesAmount;
 
-    public Contact(String name, int imageID, ArrayList<Message> chat) {
+    public Contact(String name, int imageID, List<Message> chat) {
         this.name = name;
         this.imageID = imageID;
         this.chat = chat;
@@ -23,6 +23,16 @@ public class Contact {
             }
         }
         return selectedMessages;
+    }
+
+    @Override
+    public String toString() {
+        return "Contact{" +
+                "name='" + name + '\'' +
+                ", imageID=" + imageID +
+                ", chat=" + chat +
+                ", selectedMessagesAmount=" + selectedMessagesAmount +
+                '}';
     }
 
 }

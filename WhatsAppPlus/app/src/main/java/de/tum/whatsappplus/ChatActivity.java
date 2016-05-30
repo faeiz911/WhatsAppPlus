@@ -38,6 +38,8 @@ public class ChatActivity extends AppCompatActivity implements View.OnLongClickL
     private Contact contact;
     private int selectedMessages;
 
+    private boolean isGroupChat;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,13 +47,12 @@ public class ChatActivity extends AppCompatActivity implements View.OnLongClickL
 
         Intent intent = getIntent();
         String chatType = intent.getStringExtra(Constants.EXTRA_CHAT_TYPE);
-        if ("group".equals(chatType)) {
+        isGroupChat = Constants.CHAT_TYPE_GROUP.equals(chatType);
+        if (isGroupChat) {
             String[] contacts = intent.getStringArrayExtra(Constants.EXTRA_CONTACTS_ID);
-            contact = Constants.contacts.get(contacts[0]);
-        } else {
-            String chatId = getIntent().getStringExtra(Constants.EXTRA_CHAT_ID);
-            contact = Constants.contacts.get(chatId);
         }
+        String chatId = intent.getStringExtra(Constants.EXTRA_CHAT_ID);
+        contact = Constants.contacts.get(chatId);
 
         setContentView(R.layout.activity_chat);
 
@@ -62,10 +63,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnLongClickL
         toolbarTitle.setText(contact.name);
         setSupportActionBar(toolbar);
 
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayShowTitleEnabled(false);
-        }
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         table = (TableLayout) findViewById(R.id.chat_table);
         table.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {

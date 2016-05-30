@@ -8,12 +8,19 @@ import java.util.Map;
 public class Constants {
 
     public static final Map<String, Contact> contacts;
-    public static final String EXTRA_CHAT_ID = "chat_id";
-    public static final String EXTRA_CONTACTS_ID = "contacts";
 
     public static final int MESSAGE_MARGIN_TOP = 5;
+
+    public static final String EXTRA_CHAT_ID = "chat_id";
+    public static final String EXTRA_CONTACTS_ID = "contacts";
     public static final String EXTRA_CHAT_TYPE = "chat_type";
     public static final String EXTRA_GROUP_TITLE = "group_title";
+    public static final String EXTRA_GROUP_ICON = "group_icon";
+    public static final String EXTRA_PRE_SELECTED_CONTACTS = "pre_selected_contacts";
+
+    public static final String RESULT_SELECTED_CONTACTS = "de.tum.whatsappplus.SelectedContacts";
+
+    public static final String CHAT_TYPE_GROUP = "group";
 
     static {
         contacts = new HashMap<>();
