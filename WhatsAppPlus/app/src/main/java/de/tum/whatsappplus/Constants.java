@@ -21,6 +21,7 @@ public class Constants {
     public static final String EXTRA_GROUP_TITLE = "group_title";
     public static final String EXTRA_GROUP_ICON = "group_icon";
     public static final String EXTRA_PRE_SELECTED_CONTACTS = "pre_selected_contacts";
+    public static final String EXTRA_PRE_SELECTED_MESSAGES = "pre_selected_messages";
 
     public static final String RESULT_SELECTED_CONTACTS = "de.tum.whatsappplus.SelectedContacts";
 

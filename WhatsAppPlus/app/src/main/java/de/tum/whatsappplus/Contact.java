@@ -3,7 +3,6 @@ package de.tum.whatsappplus;
 import android.graphics.Color;
 import android.util.Log;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Contact {
@@ -24,16 +23,6 @@ public class Contact {
         this.isGroupContact = isGroupContact;
         this.color = Color.HSVToColor(new float[]{(float) (Math.random() * 360), 0.75f, 1f});
         Log.v(TAG, "contact color chosen: " + color);
-    }
-
-    public List<Message> getSelectedMessages() {
-        List<Message> selectedMessages = new ArrayList<>();
-        for(Message m : chat) {
-            if(m.selected) {
-                selectedMessages.add(m);
-            }
-        }
-        return selectedMessages;
     }
 
     @Override

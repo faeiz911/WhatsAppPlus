@@ -24,6 +24,9 @@ import android.widget.ScrollView;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ChatActivity extends AppCompatActivity implements View.OnLongClickListener, View.OnClickListener {
 
     private static final String TAG = ChatActivity.class.getName();
@@ -154,6 +157,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnLongClickL
         }
 
         chatItem.setTag(R.string.tag_chat_message, message);
+        chatItem.setTag(R.string.tag_selected, false);
         if (!Constants.AUTHOR_SYSTEM.equals(message.author)) {
             chatMessageContent.setOnLongClickListener(this);
             chatMessageContent.setOnClickListener(this);
@@ -199,7 +203,22 @@ public class ChatActivity extends AppCompatActivity implements View.OnLongClickL
         Log.d(TAG, "onConvertToGroupClick with action: " + menuItem.getItemId());
         Intent convertToGroupIntent = new Intent(this, GroupCreationActivity.class);
         convertToGroupIntent.putExtra(Constants.EXTRA_CHAT_ID, contact.name);
+        convertToGroupIntent.putExtra(Constants.EXTRA_PRE_SELECTED_MESSAGES, getSelectedMessages());
         startActivity(convertToGroupIntent);
+    }
+
+    private String[] getSelectedMessages() {
+        List<String> preSelectedMessages = new ArrayList<>();
+        for (int i = 0; i < table.getChildCount(); i++) {
+            View chatItem = table.getChildAt(i);
+            Message message = (Message) chatItem.getTag(R.string.tag_chat_message);
+            if (!Constants.AUTHOR_SYSTEM.equals(message.author)) {
+                if ((boolean) chatItem.getTag(R.string.tag_selected)) {
+                    preSelectedMessages.add(message.id);
+                }
+            }
+        }
+        return preSelectedMessages.toArray(new String[preSelectedMessages.size()]);
     }
 
     @Override
@@ -222,7 +241,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnLongClickL
     private void selectOrDeselectMessage(View messageContent) {
         View chatItem = (View) messageContent.getParent();
         Message message = (Message) chatItem.getTag(R.string.tag_chat_message);
-        boolean chatItemSelected = message.selected;
+        boolean chatItemSelected = (boolean) chatItem.getTag(R.string.tag_selected);
         if (Constants.AUTHOR_SELF.equals(message.author)) {
             selectSelfMessage(!chatItemSelected, messageContent, chatItem);
         } else if (!Constants.AUTHOR_SYSTEM.equals(message.author)){
@@ -230,8 +249,6 @@ public class ChatActivity extends AppCompatActivity implements View.OnLongClickL
         } else {
             return;
         }
-
-        message.selected = !message.selected;
 
         // change of action bar
         if (selectedMessages > 0) {
@@ -279,6 +296,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnLongClickL
             selectedMessages++;
             messageContent.setBackground(getResources().getDrawable(R.drawable.drawable_chat_item_background_self_sel));
             chatItem.setBackgroundColor(getResources().getColor(R.color.color_chat_item_background_sel));
+            chatItem.setTag(R.string.tag_selected, true);
         } else {
             selectedMessages--;
             messageContent.setBackground(getResources().getDrawable(R.drawable.drawable_chat_item_background_self));
@@ -291,6 +309,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnLongClickL
             selectedMessages++;
             messageContent.setBackground(getResources().getDrawable(R.drawable.drawable_chat_item_background_other_sel));
             chatItem.setBackgroundColor(getResources().getColor(R.color.color_chat_item_background_sel));
+            chatItem.setTag(R.string.tag_selected, true);
         } else {
             selectedMessages--;
             messageContent.setBackground(getResources().getDrawable(R.drawable.drawable_chat_item_background_other));

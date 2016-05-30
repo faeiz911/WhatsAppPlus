@@ -53,8 +53,8 @@ public class GroupCreationActivity extends AppCompatActivity {
             char[] groupTitleChars = new char[titleLength];
             groupTitle.getText().getChars(0, titleLength, groupTitleChars, 0);
             openContactSelection.putExtra(Constants.EXTRA_GROUP_TITLE, new String(groupTitleChars));
-
             openContactSelection.putExtra(Constants.EXTRA_CHAT_ID, chat_id);
+            openContactSelection.putExtra(Constants.EXTRA_PRE_SELECTED_MESSAGES, getIntent().getStringArrayExtra(Constants.EXTRA_PRE_SELECTED_MESSAGES));
 
             startActivity(openContactSelection);
         }

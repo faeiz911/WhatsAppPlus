@@ -22,15 +22,19 @@ public class ContactSelectionActivity extends AppCompatActivity {
     private static final int SELECT_CONTACTS_REQUEST_CODE = 1337;
 
     private TableLayout tableLayout;
+
     private String groupTitle;
+    private String chatId;
     private List<Contact> contacts;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Contact fromChat = Constants.contacts.get(getIntent().getStringExtra(Constants.EXTRA_CHAT_ID));
-        groupTitle = getIntent().getStringExtra(Constants.EXTRA_GROUP_TITLE);
+        Intent intent = getIntent();
+        chatId = intent.getStringExtra(Constants.EXTRA_CHAT_ID);
+        groupTitle = intent.getStringExtra(Constants.EXTRA_GROUP_TITLE);
+        Contact fromChat = Constants.contacts.get(chatId);
 
         contacts = new ArrayList<>();
         contacts.add(fromChat);
@@ -110,8 +114,10 @@ public class ContactSelectionActivity extends AppCompatActivity {
         for(int i = 0; i < selectedContacts.length; i++) {
             selectedContacts[i] = contacts.get(i).name;
         }
+        messageSelectionIntent.putExtra(Constants.EXTRA_CHAT_ID, chatId);
         messageSelectionIntent.putExtra(Constants.EXTRA_CONTACTS_ID, selectedContacts);
         messageSelectionIntent.putExtra(Constants.EXTRA_GROUP_TITLE, groupTitle);
+        messageSelectionIntent.putExtra(Constants.EXTRA_PRE_SELECTED_MESSAGES, getIntent().getStringArrayExtra(Constants.EXTRA_PRE_SELECTED_MESSAGES));
         startActivity(messageSelectionIntent);
     }
 
