@@ -358,13 +358,13 @@ public class ChatActivity extends AppCompatActivity implements View.OnLongClickL
 
     private void getReaction(String messageText) {
         final String reactionMessageText;
-        if (messageText.toLowerCase().matches(".*(lust.*grillen).*|.*(grillen.*lust).*")) {
+        if (messageText.toLowerCase().matches(".*(lust.*grillen|grillen.*lust).*")) {
             reactionMessageText = "Ja, das hört sich gut an :)";
-        } else if (messageText.toLowerCase().matches(".*(michi.*einladen).*|.*(einladen.*michi).*")) {
+        } else if (messageText.toLowerCase().matches(".*(michi.*einladen|einladen.*michi).*")) {
             reactionMessageText = "Ok, aber dann soll auch Maria kommen!";
-        } else if (messageText.toLowerCase().matches(".*(wann.*treffen).*|.*(treffen.*wann).*")) {
+        } else if (messageText.toLowerCase().matches(".*(wann.*treffen|treffen.*wann).*")) {
             reactionMessageText = "Sagen wir um 15 Uhr?";
-        } else if (messageText.toLowerCase().matches(".*(abgemacht.*gruppe).*|.*(gruppe.*abgemacht).*")) {
+        } else if (messageText.toLowerCase().matches(".*(abgemacht.*gruppe|gruppe.*abgemacht).*")) {
             reactionMessageText = "Ja :D";
         } else {
             reactionMessageText = "";
