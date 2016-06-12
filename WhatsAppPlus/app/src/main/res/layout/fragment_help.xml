@@ -16,24 +16,30 @@
         android:padding="15dp"
         android:onClick="onHelpFragmentClick">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Willkommen bei WhatsAppPlus, unserer Erweiterung von WhatsApp!"
-            android:id="@+id/h1"
-            android:layout_gravity="center_horizontal"
-            android:textColor="@android:color/white"
-            android:gravity="center_horizontal"
-            android:textStyle="bold" />
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal">
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/app_logo"
-            android:src="@mipmap/whatsappplus_launcher"
-            android:layout_gravity="right"
-            android:layout_marginTop="-25dp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Willkommen bei WhatsAppPlus, unserer Erweiterung von WhatsApp!"
+                android:id="@+id/h1"
+                android:textColor="@android:color/white"
+                android:textStyle="bold"
+                android:layout_weight="1"
+                android:gravity="center_horizontal" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/app_logo"
+                android:src="@mipmap/whatsappplus_launcher"
+                android:layout_gravity="center_vertical" />
+        </LinearLayout>
 
         <TextView
             android:layout_width="wrap_content"
@@ -67,7 +73,9 @@
             android:onClick="onFormsLinkClick"
             android:gravity="center_horizontal"
             android:layout_gravity="center_horizontal"
-            android:typeface="monospace" />
+            android:typeface="monospace"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp" />
 
         <ImageView
             android:layout_width="150dp"
