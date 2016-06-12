@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -14,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -169,7 +171,8 @@ public class MessageSelectionActivity extends AppCompatActivity implements View.
             if (contactSelectedMessages != null)
                 groupMessages.addAll(contactSelectedMessages);
         }
-        groupMessages.add(new Message(Constants.AUTHOR_SYSTEM, "Previous messages from group creator's private chat.\nGroup chat begins here:", Constants.getCurrentTimeStamp()));
+        if (groupMessages.size() > 1)
+            groupMessages.add(new Message(Constants.AUTHOR_SYSTEM, "Previous messages from group creator's private chat.\nGroup chat begins here:", Constants.getCurrentTimeStamp()));
         return groupMessages;
     }
 
@@ -269,5 +272,13 @@ public class MessageSelectionActivity extends AppCompatActivity implements View.
             chatItem.setBackgroundColor(getResources().getColor(android.R.color.transparent));
             chatItem.setTag(R.string.tag_selected, false);
         }
+    }
+
+    public void notImplemented(MenuItem item) {
+        notImplemented((View) null);
+    }
+
+    public void notImplemented(View view) {
+        Toast.makeText(this, "Not implemented", Toast.LENGTH_SHORT).show();
     }
 }

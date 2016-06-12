@@ -3,6 +3,7 @@ package de.tum.whatsappplus;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,6 +12,9 @@ public class Constants {
     public static final Map<String, Contact> contacts;
 
     public static final int MESSAGE_MARGIN_TOP = 5;
+
+    public static final String PREFERENCES_GENERAL = "general";
+    public static final String PREFERENCE_FIRST_START = "firststart";
 
     public static final String AUTHOR_SELF = "author_self";
     public static final String AUTHOR_SYSTEM = "author_system";
@@ -67,5 +71,11 @@ public class Constants {
         timeElement =  cal.get(Calendar.MINUTE);
         timeStampString += ":" + (timeElement < 10 ? ("0" + timeElement) : timeElement);
         return timeStampString;
+    }
+
+    public static Contact getRandomContact() {
+        Collection<Contact> contactsVals = contacts.values();
+        Contact[] contactsArray = contactsVals.toArray(new Contact[contacts.size()]);
+        return contactsArray[(int)(Math.random()*contactsArray.length)];
     }
 }

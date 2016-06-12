@@ -1,18 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/chat_list_root"
     android:orientation="vertical">
 
-    <include layout="@layout/toolbar_chat_list"/>
+    <include
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        layout="@layout/toolbar_chat_list"
+        android:id="@+id/toolbar" />
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context="de.tum.whatsappplus.ChatListActivity"
-        android:background="@color/colorAccent">
+        android:background="@color/colorAccent"
+        android:layout_below="@+id/toolbar">
 
         <TableLayout
             android:layout_width="match_parent"
@@ -24,4 +29,4 @@
 
     </ScrollView>
 
-</LinearLayout>
+</RelativeLayout>

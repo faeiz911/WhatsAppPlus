@@ -6,30 +6,42 @@
         android:id="@+id/action_attach"
         android:icon="@drawable/ic_attach_file_white_24dp"
         android:title="@string/action_attach"
+        android:onClick="notImplemented"
         app:showAsAction="ifRoom"/>
 
     <item
         android:id="@+id/action_viewcontact"
         android:title="@string/action_viewcontact"
+        android:onClick="notImplemented"
         app:showAsAction="never"/>
 
     <item
         android:id="@+id/action_media"
         android:title="@string/action_media"
+        android:onClick="notImplemented"
         app:showAsAction="never"/>
 
     <item
         android:id="@+id/action_search"
         android:title="@string/action_search"
+        android:onClick="notImplemented"
         app:showAsAction="never"/>
 
     <item
         android:id="@+id/action_mute"
         android:title="@string/action_mute"
+        android:onClick="notImplemented"
         app:showAsAction="never"/>
 
     <item
         android:id="@+id/action_more"
         android:title="@string/action_more"
+        android:onClick="notImplemented"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/action_help"
+        android:title="@string/action_help"
+        android:onClick="onHelpMenuItemClick"
         app:showAsAction="never"/>
 </menu>

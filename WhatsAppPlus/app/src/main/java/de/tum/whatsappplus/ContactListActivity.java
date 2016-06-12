@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -11,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -103,5 +105,13 @@ public class ContactListActivity extends AppCompatActivity implements CompoundBu
 
         setResult(RESULT_OK, getIntent().putExtra(Constants.RESULT_SELECTED_CONTACTS, selectedContacts.toArray(new String[selectedContacts.size()])));
         finish();
+    }
+
+    public void notImplemented(MenuItem item) {
+        notImplemented((View) null);
+    }
+
+    public void notImplemented(View view) {
+        Toast.makeText(this, "Not implemented", Toast.LENGTH_SHORT).show();
     }
 }

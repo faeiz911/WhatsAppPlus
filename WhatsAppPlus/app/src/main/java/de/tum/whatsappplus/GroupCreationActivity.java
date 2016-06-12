@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -63,5 +64,13 @@ public class GroupCreationActivity extends AppCompatActivity {
         openContactSelection.putExtra(Constants.EXTRA_PRE_SELECTED_MESSAGES, getIntent().getStringArrayExtra(Constants.EXTRA_PRE_SELECTED_MESSAGES));
 
         startActivity(openContactSelection);
+    }
+
+    public void notImplemented(MenuItem item) {
+        notImplemented((View) null);
+    }
+
+    public void notImplemented(View view) {
+        Toast.makeText(this, "Not implemented", Toast.LENGTH_SHORT).show();
     }
 }

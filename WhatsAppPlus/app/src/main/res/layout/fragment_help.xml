@@ -1,0 +1,408 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:elevation="5dp"
+    android:id="@+id/scrollView"
+    android:background="@color/color_toolbar_selection_highlight"
+    android:clickable="true"
+    android:onClick="onHelpFragmentClick"
+    style="@style/SelectionToolbar">
+
+    <LinearLayout
+        android:orientation="vertical" android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/help_fragment"
+        android:padding="15dp"
+        android:onClick="onHelpFragmentClick">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Willkommen bei WhatsAppPlus, unserer Erweiterung von WhatsApp!"
+            android:id="@+id/h1"
+            android:layout_gravity="center_horizontal"
+            android:textColor="@android:color/white"
+            android:gravity="center_horizontal"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/app_logo"
+            android:src="@mipmap/whatsappplus_launcher"
+            android:layout_gravity="right"
+            android:layout_marginTop="-25dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="[Zum Verbergen dieser Hilfe: Bildschirm berühren oder &apos;Zurück&apos; Taste drücken]"
+            android:id="@+id/hint"
+            android:textColor="@color/color_chat_message_background_self_sel"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="15dp"
+            android:textAlignment="center" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Link zum Fragebogen (Erklärung siehe unten):"
+            android:id="@+id/shortcut_link_desc"
+            android:textColor="@android:color/white"
+            android:layout_marginTop="20dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/eval_form_url"
+            android:id="@+id/a1"
+            android:textColor="@android:color/holo_orange_light"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:onClick="onFormsLinkClick"
+            android:gravity="center_horizontal"
+            android:layout_gravity="center_horizontal"
+            android:typeface="monospace" />
+
+        <ImageView
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageView3"
+            android:src="@drawable/divider_chatlist"
+            android:scaleType="fitXY"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Neue Funktion:"
+            android:id="@+id/h2"
+            android:textColor="@android:color/white"
+            android:layout_marginTop="20dp"
+            android:textStyle="bold|italic" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Du kannst nun einen privaten Chat in eine Gruppe konvertieren!"
+            android:id="@+id/p1"
+            android:textColor="@android:color/white" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Dazu wurde ein neues Optionsmenü in der Chatansicht implementiert:"
+            android:id="@+id/p2"
+            android:textColor="@android:color/white"
+            android:layout_marginTop="20dp"/>
+
+        <ImageView
+            android:layout_width="195dp"
+            android:layout_height="150dp"
+            android:id="@+id/help_options_menu"
+            android:src="@drawable/options_menu_help"
+            android:layout_gravity="center_horizontal" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="... so wie eine neue Aktion nach dem Selektieren von Nachrichten:"
+            android:id="@+id/p3"
+            android:textColor="@android:color/white"
+            android:layout_marginTop="10dp" />
+
+        <ImageView
+            android:layout_width="257dp"
+            android:layout_height="80dp"
+            android:id="@+id/help_selection_toolbar"
+            android:src="@drawable/selection_toolbar_help"
+            android:layout_gravity="center_horizontal" />
+
+        <ImageView
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/divider1"
+            android:src="@drawable/divider_chatlist"
+            android:scaleType="fitXY"
+            android:layout_gravity="center_horizontal" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Alte Funktionen:"
+            android:id="@+id/h3"
+            android:textColor="@android:color/white"
+            android:layout_marginTop="20dp"
+            android:textStyle="bold|italic" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Natürlich handelt es sich im Weiteren nur um eine &apos;abgespeckte&apos; Version von WhatsApp. Die zur Verfügung stehenden Funktionen sind:"
+            android:id="@+id/p4"
+            android:textColor="@android:color/white" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="● Chatliste"
+            android:id="@+id/i1"
+            android:textColor="@android:color/white"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="● Chat (mit Nachrichten schreiben)"
+            android:id="@+id/i2"
+            android:textColor="@android:color/white"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="● Nachrichten selektieren"
+            android:id="@+id/i3"
+            android:textColor="@android:color/white"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="● Gruppen erstellen"
+            android:id="@+id/i4"
+            android:textColor="@android:color/white"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp" />
+
+        <ImageView
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/divider2"
+            android:src="@drawable/divider_chatlist"
+            android:scaleType="fitXY"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Deine Aufgabe:"
+            android:id="@+id/h4"
+            android:textColor="@android:color/white"
+            android:layout_marginTop="20dp"
+            android:textStyle="bold|italic" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Teste und bewerte unsere App und die neuen Features anhand von Kriterien, die du im folgenden Fragebogen findest:"
+            android:id="@+id/p5"
+            android:textColor="@android:color/white" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/eval_form_url"
+            android:id="@+id/a2"
+            android:textColor="@android:color/holo_orange_light"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:onClick="onFormsLinkClick"
+            android:gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            android:layout_gravity="center_horizontal"
+            android:typeface="monospace" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Um alle Fragen beantworten zu können, konvertiere einen privaten Chat mit einer Person in einen Gruppenchat mit mehreren Personen!"
+            android:id="@+id/p6"
+            android:textColor="@android:color/white"
+            android:layout_marginTop="15dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Wenn du willst, kannst du dir dazu das folgende Szenario vorstellen:"
+            android:id="@+id/p7"
+            android:textColor="@android:color/white"
+            android:layout_marginTop="20dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Du würdest gerne heute mit deinen Freunden Grillen organisieren. Du fragst erst einen deiner Freunde (oder Freundinnen), ob er/sie heute überhaupt Lust hätte. Wenn ja, nutzt du das neue Feature zum Konvertieren in eine Gruppe, und damit alle neuen Gruppenmitglieder auf dem gleichen Stand sind, übernimmst du die letzten Nachrichten mit deinem Freund in den Gruppenchat."
+            android:id="@+id/p8"
+            android:textColor="@android:color/white"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:textStyle="italic" />
+
+        <ImageView
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageView2"
+            android:src="@drawable/divider_chatlist"
+            android:scaleType="fitXY"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Alle Kontakte reagieren auf Nachrichten, die du ihnen schickst, die folgende Schlüsselwörter (-Kombinationen) enthalten:"
+            android:id="@+id/p9"
+            android:textColor="@android:color/white"
+            android:layout_marginTop="20dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="● &quot;lust&quot; und &quot;grillen&quot;"
+            android:id="@+id/i5"
+            android:textColor="@android:color/white"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Bsp.: &quot;Hast du heute Lust auf Grillen?&quot;"
+            android:id="@+id/i5_2"
+            android:textColor="@android:color/white"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:textStyle="italic" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="● &quot;einladen&quot;"
+            android:id="@+id/i6"
+            android:textColor="@android:color/white"
+            android:layout_marginTop="8dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Bsp.: &quot;Wollen wir noch Michael einladen?&quot;"
+            android:id="@+id/i6_2"
+            android:textColor="@android:color/white"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:textStyle="italic" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="● &quot;wann&quot; und &quot;treffen&quot;"
+            android:id="@+id/i7"
+            android:textColor="@android:color/white"
+            android:layout_marginTop="8dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Bsp.: &quot;Wann und wo wollen wir uns treffen?&quot;"
+            android:id="@+id/i7_2"
+            android:textColor="@android:color/white"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:textStyle="italic" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="● &quot;abgemacht&quot; und &quot;gruppe&quot;"
+            android:id="@+id/i8"
+            android:textColor="@android:color/white"
+            android:layout_marginTop="8dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Bsp.: &quot;Abgemacht! Soll ich für uns alle eine Gruppe erstellen?&quot;"
+            android:id="@+id/i8_2"
+            android:textColor="@android:color/white"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:textStyle="italic" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Probier es aus! :)"
+            android:id="@+id/p10"
+            android:textColor="@android:color/white"
+            android:layout_marginTop="10dp" />
+
+        <ImageView
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/divider4"
+            android:src="@drawable/divider_chatlist"
+            android:scaleType="fitXY"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Diesen Willkommensbildschirm kannst du jederzeit über das Optionsmenü &apos;Help&apos; wieder aufrufen."
+            android:id="@+id/p11"
+            android:textColor="@android:color/white"
+            android:layout_marginTop="20dp" />
+
+    </LinearLayout>
+
+</ScrollView>

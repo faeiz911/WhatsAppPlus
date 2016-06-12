@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -145,4 +146,11 @@ public class ContactSelectionActivity extends AppCompatActivity {
         startActivity(messageSelectionIntent);
     }
 
+    public void notImplemented(MenuItem item) {
+        notImplemented((View) null);
+    }
+
+    public void notImplemented(View view) {
+        Toast.makeText(this, "Not implemented", Toast.LENGTH_SHORT).show();
+    }
 }

@@ -30,7 +30,8 @@
                 android:contextClickable="true"
                 android:scaleType="fitCenter"
                 android:background="@android:color/transparent"
-                android:hapticFeedbackEnabled="false" />
+                android:hapticFeedbackEnabled="false"
+                android:onClick="notImplemented" />
 
             <TextView
                 android:layout_width="wrap_content"

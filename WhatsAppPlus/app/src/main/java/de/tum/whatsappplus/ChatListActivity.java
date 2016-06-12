@@ -1,7 +1,12 @@
 package de.tum.whatsappplus;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -13,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -29,9 +35,15 @@ public class ChatListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_list);
 
-//        getLayoutInflater().inflate(R.layout.toolbar, (ViewGroup) findViewById(R.id.chat_list_root), true);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+
+        SharedPreferences preferences = getSharedPreferences(Constants.PREFERENCES_GENERAL, MODE_PRIVATE);
+        boolean firstStart = preferences.getBoolean(Constants.PREFERENCE_FIRST_START, true);
+        if (firstStart) {
+            showHelpFragment();
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putBoolean(Constants.PREFERENCE_FIRST_START, false).apply();
+        }
     }
 
     @Override
@@ -52,8 +64,10 @@ public class ChatListActivity extends AppCompatActivity {
                 ((ImageView) chat1.findViewById(R.id.chat_icon)).setImageResource(c.imageID);
                 ((TextView) chat1.findViewById(R.id.chat_name)).setText(c.name);
                 Message lastMessage = getLastMessage(c.chat);
-                ((TextView) chat1.findViewById(R.id.chat_history_last)).setText(lastMessage.text);
-                ((TextView) chat1.findViewById(R.id.chat_timestamp)).setText(lastMessage.timeStamp);
+                if (lastMessage != null) {
+                    ((TextView) chat1.findViewById(R.id.chat_history_last)).setText(lastMessage.text);
+                    ((TextView) chat1.findViewById(R.id.chat_timestamp)).setText(lastMessage.timeStamp);
+                }
                 chat1.setTag(R.string.tag_chat_id, c.name);
 
                 table.addView(chat1);
@@ -62,6 +76,9 @@ public class ChatListActivity extends AppCompatActivity {
     }
 
     private Message getLastMessage(List<Message> chat) {
+        if (chat == null || chat.isEmpty()) {
+            return null;
+        }
         int i = chat.size() - 1;
         Message message = chat.get(i);
         while (Constants.AUTHOR_SYSTEM.equals(message.author)) {
@@ -95,5 +112,54 @@ public class ChatListActivity extends AppCompatActivity {
     protected void onStop() {
         Log.i(TAG, "Left chat list activity.");
         super.onStop();
+    }
+
+    public void onHelpMenuItemClick(MenuItem item) {
+        showHelpFragment();
+    }
+
+    public void onHelpFragmentClick(View view) {
+        dismissHelpFragment();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (!dismissHelpFragment())
+            super.onBackPressed();
+    }
+
+    private void showHelpFragment() {
+        Fragment helpFragment = new HelpFragment();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
+        transaction.add(R.id.chat_list_root, helpFragment, "helpfragment").commit();
+    }
+
+    private boolean dismissHelpFragment() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        Fragment helpFragment = fragmentManager.findFragmentByTag("helpfragment");
+        if (helpFragment != null) {
+            FragmentTransaction transaction = fragmentManager.beginTransaction();
+            transaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
+            transaction.remove(helpFragment).commit();
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public void onFormsLinkClick(View view) {
+        String url = ((TextView) view).getText().toString();
+        Intent i = new Intent(Intent.ACTION_VIEW);
+        i.setData(Uri.parse(url));
+        startActivity(i);
+    }
+
+    public void notImplemented(MenuItem item) {
+        notImplemented((View) null);
+    }
+
+    public void notImplemented(View view) {
+        Toast.makeText(this, "Not implemented", Toast.LENGTH_SHORT).show();
     }
 }

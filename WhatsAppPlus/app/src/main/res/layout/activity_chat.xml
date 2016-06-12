@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -11,57 +11,66 @@
     android:background="@color/color_chat_background"
     android:id="@+id/chat_root">
 
-    <include layout="@layout/toolbar_chat"/>
+    <include layout="@layout/toolbar_chat"
+        android:id="@+id/toolbar" />
 
-    <ScrollView
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:id="@+id/chat_scrollview">
+        android:layout_below="@+id/toolbar">
 
-        <TableLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/chat_table"
-            android:paddingBottom="5dp">
-
-        </TableLayout>
-
-    </ScrollView>
-
-    <RelativeLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:id="@+id/chat_input"
-        android:baselineAligned="false"
-        android:measureWithLargestChild="false"
-        android:layout_below="@+id/chat_table"
-        android:layout_margin="5dp">
-
-        <EditText
+        <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/chat_input_edittext"
-            android:hint="Type a message"
-            android:layout_alignParentStart="true"
-            android:layout_toStartOf="@+id/chat_input_voice_send"
-            android:background="@drawable/drawable_chat_item_background_other"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:layout_marginRight="10dp"
-            android:textColor="@color/color_chat_message_input"
-            android:textCursorDrawable="@null"/>
+            android:layout_weight="1"
+            android:id="@+id/chat_scrollview"
+            android:layout_below="@+id/toolbar">
 
-        <ImageButton
-            android:layout_width="50dp"
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/chat_table"
+                android:paddingBottom="5dp">
+
+            </TableLayout>
+
+        </ScrollView>
+
+        <RelativeLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:id="@+id/chat_input_voice_send"
-            android:src="@drawable/ic_mic_white_24dp"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:background="@drawable/drawable_chat_voice_button"
-            android:onClick="onSendClick" />
-    </RelativeLayout>
+            android:id="@+id/chat_input"
+            android:baselineAligned="false"
+            android:measureWithLargestChild="false"
+            android:layout_below="@+id/chat_scrollview"
+            android:layout_margin="5dp">
 
-</LinearLayout>
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/chat_input_edittext"
+                android:hint="Type a message"
+                android:layout_alignParentStart="true"
+                android:layout_toStartOf="@+id/chat_input_voice_send"
+                android:background="@drawable/drawable_chat_item_background_other"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:layout_marginRight="10dp"
+                android:textColor="@color/color_chat_message_input"
+                android:textCursorDrawable="@null"/>
+
+            <ImageButton
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:id="@+id/chat_input_voice_send"
+                android:src="@drawable/ic_mic_white_24dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:background="@drawable/drawable_chat_voice_button"
+                android:onClick="onSendClick" />
+        </RelativeLayout>
+    </LinearLayout>
+
+</RelativeLayout>

@@ -1,8 +1,12 @@
 package de.tum.whatsappplus;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -23,6 +27,7 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TableLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -217,6 +222,8 @@ public class ChatActivity extends AppCompatActivity implements View.OnLongClickL
             editable.clear();
 
             getReaction(messageText);
+        } else {
+            notImplemented(view);
         }
     }
 
@@ -281,9 +288,8 @@ public class ChatActivity extends AppCompatActivity implements View.OnLongClickL
             if (toolbar.getId() != R.id.toolbar_selectionmode) {
                 Log.i(TAG, "Selection mode initiated.");
                 ViewGroup chatRoot = (ViewGroup) findViewById(R.id.chat_root);
-                chatRoot.removeView(toolbar);
                 toolbar = (Toolbar) getLayoutInflater().inflate(R.layout.toolbar_chat_selectionmode, chatRoot, false);
-                chatRoot.addView(toolbar, 0);
+                chatRoot.addView(toolbar);
                 setSupportActionBar(toolbar);
                 getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -299,15 +305,9 @@ public class ChatActivity extends AppCompatActivity implements View.OnLongClickL
             if (toolbar.getId() != R.id.toolbar) {
                 Log.i(TAG, "Selection mode ended.");
                 ViewGroup chatRoot = (ViewGroup) findViewById(R.id.chat_root);
-                toolbar = (Toolbar) getLayoutInflater().inflate(R.layout.toolbar_chat, chatRoot, false);
-                ImageView toolbarIcon = (ImageView) toolbar.findViewById(R.id.toolbar_icon);
-                toolbarIcon.setImageDrawable(getResources().getDrawable(contact.imageID));
-                TextView toolbarTitle = (TextView) toolbar.findViewById(R.id.toolbar_title);
-                toolbarTitle.setText(contact.name);
-                chatRoot.removeViewAt(0);
-                chatRoot.addView(toolbar, 0);
+                chatRoot.removeView(toolbar);
+                toolbar = (Toolbar) chatRoot.findViewById(R.id.toolbar);
                 setSupportActionBar(toolbar);
-                getSupportActionBar().setDisplayShowTitleEnabled(false);
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     Window window = getWindow();
@@ -359,13 +359,13 @@ public class ChatActivity extends AppCompatActivity implements View.OnLongClickL
     private void getReaction(String messageText) {
         final String reactionMessageText;
         if (messageText.toLowerCase().matches(".*(lust.*grillen|grillen.*lust).*")) {
-            reactionMessageText = "Ja, das hört sich gut an :)";
-        } else if (messageText.toLowerCase().matches(".*(michi.*einladen|einladen.*michi).*")) {
-            reactionMessageText = "Ok, aber dann soll auch Maria kommen!";
+            reactionMessageText = "Das hört sich gut an, habe heute noch nichts vor :)";
+        } else if (messageText.toLowerCase().matches(".*einladen.*")) {
+            reactionMessageText = "Ja! Wie wäre es, wenn wir auch noch " + getAdditionalPeopleToInviteString(messageText) + " einladen?";
         } else if (messageText.toLowerCase().matches(".*(wann.*treffen|treffen.*wann).*")) {
-            reactionMessageText = "Sagen wir um 15 Uhr?";
+            reactionMessageText = "Sagen wir um 15 Uhr, am üblichen Ort?";
         } else if (messageText.toLowerCase().matches(".*(abgemacht.*gruppe|gruppe.*abgemacht).*")) {
-            reactionMessageText = "Ja :D";
+            reactionMessageText = "Ok";
         } else {
             reactionMessageText = "";
         }
@@ -386,6 +386,37 @@ public class ChatActivity extends AppCompatActivity implements View.OnLongClickL
         }
     }
 
+    private String getAdditionalPeopleToInviteString(String messageText) {
+        List<Contact> peopleToInvite = new ArrayList<>(3);
+        peopleToInvite.add(contact);
+
+        for (int i = 0; i < 2; i++) {
+            Contact c;
+            do {
+                c = Constants.getRandomContact();
+            } while (peopleToInvite.contains(c) || messageText.toLowerCase().contains(c.name.toLowerCase()));
+            peopleToInvite.add(c);
+        }
+        return peopleToInvite.get(1).name + " und " + peopleToInvite.get(2).name;
+    }
+
+    public void onHelpMenuItemClick(MenuItem item) {
+        showHelpFragment();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (selectedMessages > 0) {
+            for (int i = 0; i < table.getChildCount(); i++) {
+                View chatItem = table.getChildAt(i);
+                if ((boolean)chatItem.getTag(R.string.tag_selected)) {
+                    selectOrDeselectMessage(chatItem.findViewById(R.id.chat_message_content));
+                }
+            }
+        } else if (!dismissHelpFragment())
+            super.onBackPressed();
+    }
+
     public void onBackButtonClick(View view) {
         Log.i(TAG, "Left chat activity.");
         finish();
@@ -395,5 +426,44 @@ public class ChatActivity extends AppCompatActivity implements View.OnLongClickL
     protected void onStop() {
         Log.i(TAG, "Left chat activity.");
         super.onStop();
+    }
+
+    public void onHelpFragmentClick(View view) {
+        dismissHelpFragment();
+    }
+
+    private void showHelpFragment() {
+        Fragment helpFragment = new HelpFragment();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
+        transaction.add(R.id.chat_root, helpFragment, "helpfragment").commit();
+    }
+
+    private boolean dismissHelpFragment() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        Fragment helpFragment = fragmentManager.findFragmentByTag("helpfragment");
+        if (helpFragment != null) {
+            FragmentTransaction transaction = fragmentManager.beginTransaction();
+            transaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
+            transaction.remove(helpFragment).commit();
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public void onFormsLinkClick(View view) {
+        String url = ((TextView) view).getText().toString();
+        Intent i = new Intent(Intent.ACTION_VIEW);
+        i.setData(Uri.parse(url));
+        startActivity(i);
+    }
+
+    public void notImplemented(MenuItem item) {
+        notImplemented((View) null);
+    }
+
+    public void notImplemented(View view) {
+        Toast.makeText(this, "Not implemented", Toast.LENGTH_SHORT).show();
     }
 }

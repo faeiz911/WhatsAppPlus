@@ -26,4 +26,6 @@
     <string name="action_forward">Forward</string>
     <string name="tag_chat_message">chat_message</string>
     <string name="action_newgroup">New group</string>
+    <string name="action_help">Help</string>
+    <string name="eval_form_url"><u>http://goo.gl/forms/rD5WV6bkiCUBtOQu1</u></string>
 </resources>
