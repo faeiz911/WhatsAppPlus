@@ -39,10 +39,13 @@ public class ChatListActivity extends AppCompatActivity {
 
         SharedPreferences preferences = getSharedPreferences(Constants.PREFERENCES_GENERAL, MODE_PRIVATE);
         boolean firstStart = preferences.getBoolean(Constants.PREFERENCE_FIRST_START, true);
-        if (firstStart) {
+        long lastStart = preferences.getLong(Constants.PREFERENCE_LAST_START, 0);
+        if (firstStart || System.currentTimeMillis()-lastStart > Constants.HELP_DISPLAY_TIMEOUT) {
             showHelpFragment();
             SharedPreferences.Editor editor = preferences.edit();
-            editor.putBoolean(Constants.PREFERENCE_FIRST_START, false).apply();
+            editor.putBoolean(Constants.PREFERENCE_FIRST_START, false);
+            editor.putLong(Constants.PREFERENCE_LAST_START, System.currentTimeMillis());
+            editor.apply();
         }
     }
 

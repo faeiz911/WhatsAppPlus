@@ -12,9 +12,11 @@ public class Constants {
     public static final Map<String, Contact> contacts;
 
     public static final int MESSAGE_MARGIN_TOP = 5;
+    public static final long HELP_DISPLAY_TIMEOUT = 5400000;    // 90 min
 
     public static final String PREFERENCES_GENERAL = "general";
     public static final String PREFERENCE_FIRST_START = "firststart";
+    public static final String PREFERENCE_LAST_START = "laststart";
 
     public static final String AUTHOR_SELF = "author_self";
     public static final String AUTHOR_SYSTEM = "author_system";
