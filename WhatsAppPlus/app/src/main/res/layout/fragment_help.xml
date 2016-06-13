@@ -411,6 +411,69 @@
             android:textColor="@android:color/white"
             android:layout_marginTop="20dp" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Wenn du Fragen hast, setze dich mit uns in Verbindung über Email:"
+            android:id="@+id/p12"
+            android:textColor="@android:color/white"
+            android:layout_marginTop="20dp" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Tom Ladek:"
+                android:id="@+id/name1"
+                android:textColor="@android:color/white"
+                android:layout_marginRight="10dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/email1"
+                android:id="@+id/email1"
+                android:textColor="@android:color/holo_orange_light"
+                android:typeface="monospace"
+                android:onClick="onEmailClick"
+                android:tag="tom" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Michael Kratzer:"
+                android:id="@+id/name2"
+                android:textColor="@android:color/white"
+                android:layout_marginRight="10dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/email2"
+                android:id="@+id/email2"
+                android:textColor="@android:color/holo_orange_light"
+                android:typeface="monospace"
+                android:onClick="onEmailClick"
+                android:tag="michi" />
+
+        </LinearLayout>
+
     </LinearLayout>
 
 </ScrollView>

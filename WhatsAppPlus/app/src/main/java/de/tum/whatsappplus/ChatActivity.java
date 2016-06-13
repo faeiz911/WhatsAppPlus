@@ -466,4 +466,17 @@ public class ChatActivity extends AppCompatActivity implements View.OnLongClickL
     public void notImplemented(View view) {
         Toast.makeText(this, "Not implemented", Toast.LENGTH_SHORT).show();
     }
+
+    public void onEmailClick(View view) {
+        String mailToUrl;
+        switch (view.getTag().toString()) {
+            case "michi": mailToUrl = "mailto:mkratzer@mytum.de"; break;
+            default:
+            case "tom": mailToUrl = "mailto:ladek@in.tum.de";
+        }
+        Intent i = new Intent(Intent.ACTION_SENDTO);
+        i.setData(Uri.parse(mailToUrl));
+        startActivity(i);
+    }
+
 }

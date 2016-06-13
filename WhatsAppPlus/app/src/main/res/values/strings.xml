@@ -28,4 +28,6 @@
     <string name="action_newgroup">New group</string>
     <string name="action_help">Help</string>
     <string name="eval_form_url"><u>http://goo.gl/forms/rD5WV6bkiCUBtOQu1</u></string>
+    <string name="email1"><u>ladek@in.tum.de</u></string>
+    <string name="email2"><u>mkratzer@mytum.de</u></string>
 </resources>
