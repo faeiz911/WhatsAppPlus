@@ -14,4 +14,5 @@ public class HelpFragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_help, container, false);
     }
+    //TODO disable for eval
 }

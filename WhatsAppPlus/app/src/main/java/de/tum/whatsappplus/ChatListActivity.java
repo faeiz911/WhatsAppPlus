@@ -47,6 +47,9 @@ public class ChatListActivity extends AppCompatActivity {
             editor.putLong(Constants.PREFERENCE_LAST_START, System.currentTimeMillis());
             editor.apply();
         }
+
+        // TODO shared preference: which app version are you using? (disable screens, buttons, etc.)
+        // TODO track all clicks
     }
 
     @Override

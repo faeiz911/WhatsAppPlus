@@ -8,6 +8,7 @@
         android:title="@string/action_convert_to_group"
         android:onClick="onConvertToGroupClick"
         app:showAsAction="always"/>
+    <!--TODO disable for eval-->
 
     <item
         android:id="@+id/action_star"

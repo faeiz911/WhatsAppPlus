@@ -65,6 +65,8 @@ public class Constants {
         contacts.put("Moritz", new Contact("Moritz", R.drawable.whatsappplus_person_moritz, new ArrayList<Message>(), false));
     }
 
+    // TODO Grillen-Chat mit Michael und Manuel (und wahrsch. Chat füllen mit allen anderen)
+
     public static String getCurrentTimeStamp() {
         String timeStampString = "";
         Calendar cal = Calendar.getInstance();

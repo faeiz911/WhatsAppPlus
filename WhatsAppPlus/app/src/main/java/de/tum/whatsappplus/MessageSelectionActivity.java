@@ -34,6 +34,8 @@ public class MessageSelectionActivity extends AppCompatActivity implements View.
 
     private TableLayout table;
 
+    //TODO disable for eval
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

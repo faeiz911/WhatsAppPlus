@@ -186,6 +186,8 @@ public class ChatActivity extends AppCompatActivity implements View.OnLongClickL
         });
     }
 
+    // TODO copy & paste messages
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         Log.d(TAG, "onCreateOptionsMenu called");
