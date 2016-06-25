@@ -22,18 +22,22 @@
         </activity>
         <activity
             android:name=".GroupCreationActivity"
-            android:parentActivityName=".ChatListActivity">
+            android:parentActivityName=".ChatListActivity"
+            android:taskAffinity="">
         </activity>
         <activity
             android:name=".ContactSelectionActivity"
-            android:parentActivityName=".GroupCreationActivity">
+            android:parentActivityName=".GroupCreationActivity"
+            android:taskAffinity="">
         </activity>
         <activity
             android:name=".ContactListActivity"
-            android:parentActivityName=".ContactSelectionActivity">
+            android:parentActivityName=".ContactSelectionActivity"
+            android:taskAffinity="">
         </activity>
         <activity android:name=".MessageSelectionActivity"
-            android:parentActivityName=".ContactSelectionActivity">
+            android:parentActivityName=".ContactSelectionActivity"
+            android:taskAffinity="">
         </activity>
     </application>
 

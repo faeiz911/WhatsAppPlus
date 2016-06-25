@@ -3,6 +3,7 @@ package de.tum.whatsappplus;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -27,6 +28,7 @@ public class ContactSelectionActivity extends AppCompatActivity {
 
     private String groupTitle;
     private String chatId;
+    private int groupIcon;
     private List<Contact> contacts;
 
     @Override
@@ -36,6 +38,7 @@ public class ContactSelectionActivity extends AppCompatActivity {
         Intent intent = getIntent();
         chatId = intent.getStringExtra(Constants.EXTRA_CHAT_ID);
         groupTitle = intent.getStringExtra(Constants.EXTRA_GROUP_TITLE);
+        groupIcon = intent.getIntExtra(Constants.EXTRA_GROUP_ICON, R.drawable.whatsappplus_icon_group);
 
         Log.i(TAG, "Contact selection activity started." + (chatId != null ? " Pre-selected contact is '" + chatId + "', group title is '" + groupTitle + "'." : ""));
 
@@ -51,6 +54,11 @@ public class ContactSelectionActivity extends AppCompatActivity {
         contactNameEditText.getBackground().mutate().setColorFilter(getResources().getColor(R.color.color_add_button), PorterDuff.Mode.SRC_ATOP);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        if (!PreferenceManager.getDefaultSharedPreferences(this).getBoolean(getString(R.string.pref_whatsapp_plus_features), false)) {
+            TextView textView = (TextView) toolbar.findViewById(R.id.toolbar_title);
+            textView.setText("CREATE");
+        }
+
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("New group");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -127,7 +135,21 @@ public class ContactSelectionActivity extends AppCompatActivity {
             Log.i(TAG, "Attempted to create group with no participants.");
             return;
         }
-        Intent messageSelectionIntent = new Intent(this, MessageSelectionActivity.class);
+
+        boolean isLastActivityBeforeGroup = !PreferenceManager.getDefaultSharedPreferences(this).getBoolean(getString(R.string.pref_whatsapp_plus_features), false);
+        Intent nextIntent;
+        if (!isLastActivityBeforeGroup) {
+            nextIntent = new Intent(this, MessageSelectionActivity.class);
+            nextIntent.putExtra(Constants.EXTRA_CHAT_ID, chatId);
+        } else {
+            nextIntent = new Intent(this, ChatActivity.class);
+            List<Message> groupMessages = new ArrayList<>();
+            groupMessages.add(new Message(Constants.AUTHOR_SYSTEM, "You created group \"" + groupTitle + "\".", Constants.getCurrentTimeStamp()));
+            Constants.contacts.put(groupTitle, new Contact(groupTitle, groupIcon, groupMessages, true));
+            nextIntent.putExtra(Constants.EXTRA_CHAT_ID, groupTitle);
+            nextIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        }
+
         String[] selectedContacts = new String[contacts.size()];
         String selectedContactsConcatString = "";
         for (int i = 0; i < selectedContacts.length; i++) {
@@ -139,11 +161,14 @@ public class ContactSelectionActivity extends AppCompatActivity {
         else
             Log.i(TAG, "Clicked on Next in contact selection activity with no selected contacts.");
 
-        messageSelectionIntent.putExtra(Constants.EXTRA_CHAT_ID, chatId);
-        messageSelectionIntent.putExtra(Constants.EXTRA_CONTACTS_ID, selectedContacts);
-        messageSelectionIntent.putExtra(Constants.EXTRA_GROUP_TITLE, groupTitle);
-        messageSelectionIntent.putExtra(Constants.EXTRA_PRE_SELECTED_MESSAGES, getIntent().getStringArrayExtra(Constants.EXTRA_PRE_SELECTED_MESSAGES));
-        startActivity(messageSelectionIntent);
+        nextIntent.putExtra(Constants.EXTRA_CHAT_TYPE, Constants.CHAT_TYPE_GROUP);
+        nextIntent.putExtra(Constants.EXTRA_CONTACTS_ID, selectedContacts);
+        nextIntent.putExtra(Constants.EXTRA_GROUP_TITLE, groupTitle);
+        nextIntent.putExtra(Constants.EXTRA_PRE_SELECTED_MESSAGES, getIntent().getStringArrayExtra(Constants.EXTRA_PRE_SELECTED_MESSAGES));
+        startActivity(nextIntent);
+
+        if (isLastActivityBeforeGroup)
+            finishAffinity();
     }
 
     public void notImplemented(MenuItem item) {

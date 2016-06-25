@@ -34,8 +34,6 @@ public class MessageSelectionActivity extends AppCompatActivity implements View.
 
     private TableLayout table;
 
-    //TODO disable for eval
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -148,7 +146,7 @@ public class MessageSelectionActivity extends AppCompatActivity implements View.
         startGroupChatActivity.putExtra(Constants.EXTRA_CHAT_TYPE, Constants.CHAT_TYPE_GROUP);
         startGroupChatActivity.putExtra(Constants.EXTRA_CHAT_ID, groupTitle);
         startGroupChatActivity.putExtra(Constants.EXTRA_CONTACTS_ID, selectedContacts);
-        startGroupChatActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startGroupChatActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
 
         String selectedMessagesConcatString = "";
         for (Message m : groupMessages) {
@@ -161,6 +159,7 @@ public class MessageSelectionActivity extends AppCompatActivity implements View.
         Log.i(TAG, "Clicked on Create in message selection activity. Group title is '" + groupTitle + "'. Group contacts are: " + selectedContactsConcatString.substring(0, selectedContactsConcatString.length() - 2)
                 + (!selectedMessagesConcatString.isEmpty() ? "\nSelected messages are:\n" + selectedMessagesConcatString.substring(0, selectedMessagesConcatString.length() - 1) : ""));
         startActivity(startGroupChatActivity);
+        finishAffinity();
     }
 
     private List<Message> getGroupMessages() {

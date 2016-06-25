@@ -40,12 +40,13 @@
         android:onClick="notImplemented"
         app:showAsAction="never"/>
 
-    <item
-        android:id="@+id/action_convert_to_group"
-        android:title="@string/action_convert_to_group"
-        android:onClick="onConvertToGroupClick"
-        app:showAsAction="never"/>
-    <!--TODO disable for eval-->
+    <group android:id="@+id/group_convert_to_group">
+        <item
+            android:id="@+id/action_convert_to_group"
+            android:title="@string/action_convert_to_group"
+            android:onClick="onConvertToGroupClick"
+            app:showAsAction="never"/>
+    </group>
 
     <item
         android:id="@+id/action_more"
@@ -53,9 +54,9 @@
         android:onClick="notImplemented"
         app:showAsAction="never"/>
 
-    <item
-        android:id="@+id/action_help"
-        android:title="@string/action_help"
-        android:onClick="onHelpMenuItemClick"
-        app:showAsAction="never"/>
+    <!--<item-->
+        <!--android:id="@+id/action_help"-->
+        <!--android:title="@string/action_help"-->
+        <!--android:onClick="onHelpMenuItemClick"-->
+        <!--app:showAsAction="never"/>-->
 </menu>

@@ -7,7 +7,7 @@
     android:background="@color/color_toolbar_selection_highlight"
     android:clickable="true"
     android:onClick="onHelpFragmentClick"
-    style="@style/SelectionToolbar">
+    style="@style/SelectionToolbarTheme">
 
     <LinearLayout
         android:orientation="vertical" android:layout_width="match_parent"

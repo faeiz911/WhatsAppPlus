@@ -25,12 +25,12 @@
         <item
             android:id="@+id/action_settings"
             android:title="@string/action_settings"
-            android:onClick="notImplemented"
+            android:onClick="onSettingsClick"
             app:showAsAction="never"/>
 
-        <item
-            android:id="@+id/action_help"
-            android:title="@string/action_help"
-            android:onClick="onHelpMenuItemClick"
-            app:showAsAction="never"/>
+        <!--<item-->
+            <!--android:id="@+id/action_help"-->
+            <!--android:title="@string/action_help"-->
+            <!--android:onClick="onHelpMenuItemClick"-->
+            <!--app:showAsAction="never"/>-->
 </menu>

@@ -1,12 +1,16 @@
 package de.tum.whatsappplus;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -43,7 +47,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnLongClickL
     private TableLayout table;
 
     private Contact contact;
-    private int selectedMessages;
+    private int selectedMessagesCount;
 
     private boolean isGroupChat;
 
@@ -79,7 +83,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnLongClickL
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         ImageView toolbarIcon = (ImageView) toolbar.findViewById(R.id.toolbar_icon);
-        toolbarIcon.setImageDrawable(getResources().getDrawable(Constants.contacts.get(contact.name).imageID));
+        toolbarIcon.setImageDrawable(getResources().getDrawable(contact.imageID));
         TextView toolbarTitle = (TextView) toolbar.findViewById(R.id.toolbar_title);
         toolbarTitle.setText(contact.name);
         setSupportActionBar(toolbar);
@@ -186,8 +190,6 @@ public class ChatActivity extends AppCompatActivity implements View.OnLongClickL
         });
     }
 
-    // TODO copy & paste messages
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         Log.d(TAG, "onCreateOptionsMenu called");
@@ -200,6 +202,8 @@ public class ChatActivity extends AppCompatActivity implements View.OnLongClickL
             else
                 inflater.inflate(R.menu.menu_chat, menu);
         }
+
+        menu.setGroupVisible(R.id.group_convert_to_group, PreferenceManager.getDefaultSharedPreferences(this).getBoolean(getString(R.string.pref_whatsapp_plus_features), false));
 
         return true;
     }
@@ -235,24 +239,27 @@ public class ChatActivity extends AppCompatActivity implements View.OnLongClickL
         else if (menuItem.getItemId() == R.id.action_convert_to_group_with_messages) {
             Log.i(TAG, "Clicked on 'Convert to group' in action bar (while having messages selected).");
         }
+
+        deselectAllMessages();
+
         Intent convertToGroupIntent = new Intent(this, GroupCreationActivity.class);
         convertToGroupIntent.putExtra(Constants.EXTRA_CHAT_ID, contact.name);
-        convertToGroupIntent.putExtra(Constants.EXTRA_PRE_SELECTED_MESSAGES, getSelectedMessages());
+        convertToGroupIntent.putExtra(Constants.EXTRA_PRE_SELECTED_MESSAGES, getSelectedMessagesIDs());
         startActivity(convertToGroupIntent);
     }
 
-    private String[] getSelectedMessages() {
-        List<String> preSelectedMessages = new ArrayList<>();
+    private String[] getSelectedMessagesIDs() {
+        List<String> selectedMessagesIDs = new ArrayList<>();
         for (int i = 0; i < table.getChildCount(); i++) {
             View chatItem = table.getChildAt(i);
             Message message = (Message) chatItem.getTag(R.string.tag_chat_message);
             if (!Constants.AUTHOR_SYSTEM.equals(message.author)) {
                 if ((boolean) chatItem.getTag(R.string.tag_selected)) {
-                    preSelectedMessages.add(message.id);
+                    selectedMessagesIDs.add(message.id);
                 }
             }
         }
-        return preSelectedMessages.toArray(new String[preSelectedMessages.size()]);
+        return selectedMessagesIDs.toArray(new String[selectedMessagesIDs.size()]);
     }
 
     @Override
@@ -267,7 +274,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnLongClickL
     public void onClick(View v) {
         Log.d(TAG, "click: " + v);
 
-        if (selectedMessages > 0) {
+        if (selectedMessagesCount > 0) {
             selectOrDeselectMessage(v);
         }
     }
@@ -285,7 +292,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnLongClickL
         }
 
         // change of action bar
-        if (selectedMessages > 0) {
+        if (selectedMessagesCount > 0) {
             // toolbar is different, load it
             if (toolbar.getId() != R.id.toolbar_selectionmode) {
                 Log.i(TAG, "Selection mode initiated.");
@@ -301,7 +308,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnLongClickL
                     window.setStatusBarColor(getResources().getColor(R.color.color_toolbar_selection_primary_dark));
                 }
             }
-            getSupportActionBar().setTitle(Integer.toString(selectedMessages));
+            getSupportActionBar().setTitle(Integer.toString(selectedMessagesCount));
         } else {
             // toolbar is different, load it
             if (toolbar.getId() != R.id.toolbar) {
@@ -324,14 +331,14 @@ public class ChatActivity extends AppCompatActivity implements View.OnLongClickL
         if (toggle) {
             Log.i(TAG, "Selected own message '" + ((TextView)messageContent.findViewById(R.id.chat_message_text)).getText() +
                     "' from '" + ((TextView)messageContent.findViewById(R.id.chat_message_timestamp)).getText() + "'.");
-            selectedMessages++;
+            selectedMessagesCount++;
             messageContent.setBackground(getResources().getDrawable(R.drawable.drawable_chat_item_background_self_sel));
             chatItem.setBackgroundColor(getResources().getColor(R.color.color_chat_item_background_sel));
             chatItem.setTag(R.string.tag_selected, true);
         } else {
             Log.i(TAG, "Deselected own message '" + ((TextView)messageContent.findViewById(R.id.chat_message_text)).getText() +
                     "' from '" + ((TextView)messageContent.findViewById(R.id.chat_message_timestamp)).getText() + "'.");
-            selectedMessages--;
+            selectedMessagesCount--;
             messageContent.setBackground(getResources().getDrawable(R.drawable.drawable_chat_item_background_self));
             chatItem.setBackgroundColor(getResources().getColor(android.R.color.transparent));
             chatItem.setTag(R.string.tag_selected, false);
@@ -343,7 +350,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnLongClickL
             Log.i(TAG, "Selected " + (contact.isGroupContact ? ((TextView)messageContent.findViewById(R.id.chat_message_author)).getText() : contact.name) + "'s message '"
                     + ((TextView)messageContent.findViewById(R.id.chat_message_text)).getText() +
                     "' from '" + ((TextView)messageContent.findViewById(R.id.chat_message_timestamp)).getText() + "'.");
-            selectedMessages++;
+            selectedMessagesCount++;
             messageContent.setBackground(getResources().getDrawable(R.drawable.drawable_chat_item_background_other_sel));
             chatItem.setBackgroundColor(getResources().getColor(R.color.color_chat_item_background_sel));
             chatItem.setTag(R.string.tag_selected, true);
@@ -351,7 +358,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnLongClickL
             Log.i(TAG, "Deselected " + (contact.isGroupContact ? ((TextView)messageContent.findViewById(R.id.chat_message_author)).getText() : contact.name) + "'s message '"
                     + ((TextView)messageContent.findViewById(R.id.chat_message_text)).getText() +
                     "' from '" + ((TextView)messageContent.findViewById(R.id.chat_message_timestamp)).getText() + "'.");
-            selectedMessages--;
+            selectedMessagesCount--;
             messageContent.setBackground(getResources().getDrawable(R.drawable.drawable_chat_item_background_other));
             chatItem.setBackgroundColor(getResources().getColor(android.R.color.transparent));
             chatItem.setTag(R.string.tag_selected, false);
@@ -408,15 +415,19 @@ public class ChatActivity extends AppCompatActivity implements View.OnLongClickL
 
     @Override
     public void onBackPressed() {
-        if (selectedMessages > 0) {
-            for (int i = 0; i < table.getChildCount(); i++) {
-                View chatItem = table.getChildAt(i);
-                if ((boolean)chatItem.getTag(R.string.tag_selected)) {
-                    selectOrDeselectMessage(chatItem.findViewById(R.id.chat_message_content));
-                }
-            }
+        if (selectedMessagesCount > 0) {
+            deselectAllMessages();
         } else if (!dismissHelpFragment())
             super.onBackPressed();
+    }
+
+    private void deselectAllMessages() {
+        for (int i = 0; i < table.getChildCount(); i++) {
+            View chatItem = table.getChildAt(i);
+            if ((boolean)chatItem.getTag(R.string.tag_selected)) {
+                selectOrDeselectMessage(chatItem.findViewById(R.id.chat_message_content));
+            }
+        }
     }
 
     public void onBackButtonClick(View view) {
@@ -436,17 +447,17 @@ public class ChatActivity extends AppCompatActivity implements View.OnLongClickL
 
     private void showHelpFragment() {
         Fragment helpFragment = new HelpFragment();
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
         transaction.add(R.id.chat_root, helpFragment, "helpfragment").commit();
     }
 
     private boolean dismissHelpFragment() {
-        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentManager fragmentManager = getFragmentManager();
         Fragment helpFragment = fragmentManager.findFragmentByTag("helpfragment");
         if (helpFragment != null) {
             FragmentTransaction transaction = fragmentManager.beginTransaction();
-            transaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
+            transaction.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
             transaction.remove(helpFragment).commit();
             return true;
         } else {
@@ -481,4 +492,39 @@ public class ChatActivity extends AppCompatActivity implements View.OnLongClickL
         startActivity(i);
     }
 
+    public void onCopyMessagesClick(MenuItem item) {
+        List<Message> selectedMessages = new ArrayList<>();
+        for (int i = 0; i < table.getChildCount(); i++) {
+            View chatItem = table.getChildAt(i);
+            Message message = (Message) chatItem.getTag(R.string.tag_chat_message);
+            if (!Constants.AUTHOR_SYSTEM.equals(message.author)) {
+                if ((boolean) chatItem.getTag(R.string.tag_selected)) {
+                    selectedMessages.add(message);
+                }
+            }
+        }
+
+        StringBuilder stringBuilder = new StringBuilder();
+        boolean firstMessage = true;
+        int copiedMessagesCount = 0;
+        for (Message message : selectedMessages) {
+            if (!firstMessage)
+                stringBuilder.append("\n");
+            if (selectedMessages.size() > 1) {
+                stringBuilder.append("[").append(message.timeStamp).append("] ");
+                stringBuilder.append(message.author.equals(Constants.AUTHOR_SELF) ? "Me" : message.author).append(": ");
+            }
+            stringBuilder.append(message.text);
+
+            copiedMessagesCount++;
+            firstMessage = false;
+        }
+
+        if (copiedMessagesCount > 0) {
+            ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+            clipboard.setPrimaryClip(ClipData.newPlainText("WhatsAppPlus - Copied messages", stringBuilder.toString()));
+            deselectAllMessages();
+            Toast.makeText(ChatActivity.this, (copiedMessagesCount > 1 ? copiedMessagesCount + " messages " : "Message ") + "copied", Toast.LENGTH_SHORT).show();
+        }
+    }
 }

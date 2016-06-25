@@ -2,13 +2,14 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item
-        android:id="@+id/action_convert_to_group_with_messages"
-        android:icon="@drawable/whatsappplus_icon_group_small"
-        android:title="@string/action_convert_to_group"
-        android:onClick="onConvertToGroupClick"
-        app:showAsAction="always"/>
-    <!--TODO disable for eval-->
+    <group android:id="@+id/group_convert_to_group">
+        <item
+            android:id="@+id/action_convert_to_group_with_messages"
+            android:icon="@drawable/whatsappplus_icon_group_small"
+            android:title="@string/action_convert_to_group"
+            android:onClick="onConvertToGroupClick"
+            app:showAsAction="always"/>
+    </group>
 
     <item
         android:id="@+id/action_star"
@@ -28,7 +29,7 @@
         android:id="@+id/action_copy"
         android:icon="@drawable/ic_content_copy_white_24dp"
         android:title="@string/action_copy"
-        android:onClick="notImplemented"
+        android:onClick="onCopyMessagesClick"
         app:showAsAction="always"/>
 
     <item

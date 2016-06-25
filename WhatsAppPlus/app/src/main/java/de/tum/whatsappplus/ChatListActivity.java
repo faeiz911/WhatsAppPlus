@@ -1,12 +1,12 @@
 package de.tum.whatsappplus;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -14,19 +14,15 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import java.util.List;
 
 public class ChatListActivity extends AppCompatActivity {
 
     private static final String TAG = ChatListActivity.class.getName();
 
     private boolean activityJustCreated = false;
+    private boolean settingsDisplayed = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,18 +33,19 @@ public class ChatListActivity extends AppCompatActivity {
 
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
 
-        SharedPreferences preferences = getSharedPreferences(Constants.PREFERENCES_GENERAL, MODE_PRIVATE);
-        boolean firstStart = preferences.getBoolean(Constants.PREFERENCE_FIRST_START, true);
-        long lastStart = preferences.getLong(Constants.PREFERENCE_LAST_START, 0);
-        if (firstStart || System.currentTimeMillis()-lastStart > Constants.HELP_DISPLAY_TIMEOUT) {
-            showHelpFragment();
-            SharedPreferences.Editor editor = preferences.edit();
-            editor.putBoolean(Constants.PREFERENCE_FIRST_START, false);
-            editor.putLong(Constants.PREFERENCE_LAST_START, System.currentTimeMillis());
-            editor.apply();
-        }
+//        SharedPreferences preferences = getSharedPreferences(Constants.PREFERENCES_GENERAL, MODE_PRIVATE);
+//        boolean firstStart = preferences.getBoolean(Constants.PREFERENCE_FIRST_START, true);
+//        long lastStart = preferences.getLong(Constants.PREFERENCE_LAST_START, 0);
+//        if (firstStart || System.currentTimeMillis()-lastStart > Constants.HELP_DISPLAY_TIMEOUT) {
+//            showHelpFragment();
+//            SharedPreferences.Editor editor = preferences.edit();
+//            editor.putBoolean(Constants.PREFERENCE_FIRST_START, false);
+//            editor.putLong(Constants.PREFERENCE_LAST_START, System.currentTimeMillis());
+//            editor.apply();
+//        }
 
-        // TODO shared preference: which app version are you using? (disable screens, buttons, etc.)
+        FragmentTransaction transition = getFragmentManager().beginTransaction();
+        transition.add(R.id.chat_list_content, new ChatListFragment(), "chat_list").commit();
         // TODO track all clicks
     }
 
@@ -56,50 +53,26 @@ public class ChatListActivity extends AppCompatActivity {
     protected void onResume() {
         if (!activityJustCreated) Log.i(TAG, "Returned to chat list activity.");
         super.onResume();
-
-        TableLayout table = (TableLayout) findViewById(R.id.chat_list_table);
-        if (table != null) {
-            table.removeAllViews();
-            table.setShowDividers(LinearLayout.SHOW_DIVIDER_MIDDLE);
-
-            for (String key : Constants.contacts.keySet()) {
-                Contact c = Constants.contacts.get(key);
-                if (c.chat == null || c.chat.isEmpty()) continue;
-
-                View chat1 = getLayoutInflater().inflate(R.layout.view_chat_history_item, table, false);
-                ((ImageView) chat1.findViewById(R.id.chat_icon)).setImageResource(c.imageID);
-                ((TextView) chat1.findViewById(R.id.chat_name)).setText(c.name);
-                Message lastMessage = getLastMessage(c.chat);
-                if (lastMessage != null) {
-                    ((TextView) chat1.findViewById(R.id.chat_history_last)).setText(lastMessage.text);
-                    ((TextView) chat1.findViewById(R.id.chat_timestamp)).setText(lastMessage.timeStamp);
-                }
-                chat1.setTag(R.string.tag_chat_id, c.name);
-
-                table.addView(chat1);
-            }
-        }
-    }
-
-    private Message getLastMessage(List<Message> chat) {
-        if (chat == null || chat.isEmpty()) {
-            return null;
-        }
-        int i = chat.size() - 1;
-        Message message = chat.get(i);
-        while (Constants.AUTHOR_SYSTEM.equals(message.author)) {
-            if (i == 0)
-                return new Message(Constants.AUTHOR_SYSTEM, "", message.timeStamp);
-            message = chat.get(--i);
-        }
-        return message;
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_chat_list, menu);
+        super.onCreateOptionsMenu(menu);
+        if (!settingsDisplayed) {
+            MenuInflater inflater = getMenuInflater();
+            inflater.inflate(R.menu.menu_chat_list, menu);
+        }
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Log.d(TAG, "onOptionsItemSelected " + item);
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                getFragmentManager().popBackStack();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     public void onChatSummaryClick(View view) {
@@ -136,17 +109,17 @@ public class ChatListActivity extends AppCompatActivity {
 
     private void showHelpFragment() {
         Fragment helpFragment = new HelpFragment();
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
         transaction.add(R.id.chat_list_root, helpFragment, "helpfragment").commit();
     }
 
     private boolean dismissHelpFragment() {
-        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentManager fragmentManager = getFragmentManager();
         Fragment helpFragment = fragmentManager.findFragmentByTag("helpfragment");
         if (helpFragment != null) {
             FragmentTransaction transaction = fragmentManager.beginTransaction();
-            transaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
+            transaction.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
             transaction.remove(helpFragment).commit();
             return true;
         } else {
@@ -179,6 +152,35 @@ public class ChatListActivity extends AppCompatActivity {
         Intent i = new Intent(Intent.ACTION_SENDTO);
         i.setData(Uri.parse(mailToUrl));
         startActivity(i);
+    }
+
+    public void onSettingsClick(MenuItem item) {
+        final FragmentManager manager = getFragmentManager();
+        manager.addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
+            @Override
+            public void onBackStackChanged() {
+                if (manager.getBackStackEntryCount() == 0) {
+                    ActionBar actionBar = getSupportActionBar();
+                    if (actionBar != null) {
+                        actionBar.setTitle(getString(R.string.app_name));
+                        actionBar.setDisplayHomeAsUpEnabled(false);
+                    }
+                    settingsDisplayed = false;
+                    invalidateOptionsMenu();
+                }
+            }
+        });
+        FragmentTransaction transaction = manager.beginTransaction();
+        transaction.replace(R.id.chat_list_content, new SettingsFragment(), "settings").addToBackStack(null);
+        transaction.commit();
+
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setTitle("Settings");
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+        settingsDisplayed = true;
+        invalidateOptionsMenu();
     }
 
 }
