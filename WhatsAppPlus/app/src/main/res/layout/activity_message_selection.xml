@@ -1,62 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="de.tum.whatsappplus.ContactListActivity"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:id="@+id/message_selection_root">
 
-    <include layout="@layout/toolbar_message_selection"/>
+    <include layout="@layout/toolbar_message_selection"
+        android:id="@+id/message_selection_toolbar" />
 
     <View
         android:layout_width="fill_parent"
         android:layout_height="1dp"
-        android:background="#ffffff"/>
+        android:background="#ffffff"
+        android:id="@+id/message_selection_divider"
+        android:layout_below="@+id/message_selection_toolbar" />
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/color_chat_background">
+        android:background="@color/color_chat_background"
+        android:layout_below="@+id/message_selection_divider"
+        android:id="@+id/message_selection_content">
 
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="80dp"
-            android:background="@color/colorPrimary">
+            android:background="@color/colorPrimary"
+            android:id="@+id/message_selection_content_contact">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Choose Backlog Messages"
-                android:id="@+id/description"
                 android:background="@android:color/transparent"
                 android:textColor="@android:color/white"
                 android:layout_marginTop="7dp"
-                android:layout_marginLeft="10dp" />
+                android:layout_marginLeft="10dp"
+                android:id="@+id/message_selection_content_contact_desc" />
 
             <Spinner
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:id="@+id/contactSpinner"
+                android:id="@+id/message_selection_content_contact_spinner"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
                 android:layout_marginLeft="70dp"
-                android:layout_marginRight="70dp"
+                android:layout_marginRight="70dp"/>
+            <!--android:transitionGroup="false" -->
 
-                android:transitionGroup="false" />
         </LinearLayout>
 
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:id="@+id/message_selection_content_messages_scrollview">
             <TableLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/messageList">
+                android:id="@+id/message_selection_content_messages_table">
             </TableLayout>
         </ScrollView>
 
     </LinearLayout>
 
-</LinearLayout>
+</RelativeLayout>

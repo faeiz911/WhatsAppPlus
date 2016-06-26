@@ -32,6 +32,7 @@ public class Constants {
     public static final String RESULT_SELECTED_CONTACTS = "de.tum.whatsappplus.SelectedContacts";
 
     public static final String CHAT_TYPE_GROUP = "group";
+    public static final String TAG_CLICK_COUNTER = "ClickCounter";
 
     static {
         contacts = new HashMap<>();

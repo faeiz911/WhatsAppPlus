@@ -4,5 +4,6 @@
         android:key="@string/pref_whatsapp_plus_features"
         android:title="@string/pref_whatsapp_plus_features"
         android:summary="@string/pref_whatsapp_plus_features_summ"
-        android:defaultValue="false"/>
+        android:defaultValue="false"
+        android:textSize="12sp"/>
 </PreferenceScreen>

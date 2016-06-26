@@ -31,7 +31,16 @@ public class ChatListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_list);
 
-        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+        setSupportActionBar((Toolbar) findViewById(R.id.chat_list_toolbar));
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null)
+            getSupportActionBar().addOnMenuVisibilityListener(new ActionBar.OnMenuVisibilityListener() {
+                @Override
+                public void onMenuVisibilityChanged(boolean isVisible) {
+                    if (!isVisible)
+                        Log.i(Constants.TAG_CLICK_COUNTER, "Options menu popup hidden");
+                }
+            });
 
 //        SharedPreferences preferences = getSharedPreferences(Constants.PREFERENCES_GENERAL, MODE_PRIVATE);
 //        boolean firstStart = preferences.getBoolean(Constants.PREFERENCE_FIRST_START, true);
@@ -44,9 +53,10 @@ public class ChatListActivity extends AppCompatActivity {
 //            editor.apply();
 //        }
 
-        FragmentTransaction transition = getFragmentManager().beginTransaction();
-        transition.add(R.id.chat_list_content, new ChatListFragment(), "chat_list").commit();
-        // TODO track all clicks
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.add(R.id.chat_list_content, new ChatListFragment(), "chat_list");
+        transaction.add(R.id.chat_list_root, new ClickInterceptorOverlayFragment(), "click_interceptor");
+        transaction.commit();
     }
 
     @Override
@@ -103,6 +113,7 @@ public class ChatListActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        Log.i(Constants.TAG_CLICK_COUNTER, "Back pressed");
         if (!dismissHelpFragment())
             super.onBackPressed();
     }

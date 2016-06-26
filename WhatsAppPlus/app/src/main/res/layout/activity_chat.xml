@@ -12,20 +12,20 @@
     android:id="@+id/chat_root">
 
     <include layout="@layout/toolbar_chat"
-        android:id="@+id/toolbar" />
+        android:id="@+id/chat_toolbar" />
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar">
+        android:id="@+id/chat_content"
+        android:layout_below="@+id/chat_toolbar">
 
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:id="@+id/chat_scrollview"
-            android:layout_below="@+id/toolbar">
+            android:id="@+id/chat_scrollview">
 
             <TableLayout
                 android:layout_width="match_parent"
@@ -41,11 +41,10 @@
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:id="@+id/chat_input"
             android:baselineAligned="false"
             android:measureWithLargestChild="false"
-            android:layout_below="@+id/chat_scrollview"
-            android:layout_margin="5dp">
+            android:layout_margin="5dp"
+            android:id="@+id/chat_input">
 
             <EditText
                 android:layout_width="match_parent"

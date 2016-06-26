@@ -5,7 +5,8 @@
     android:layout_height="match_parent"
     tools:context="de.tum.whatsappplus.ChatListActivity"
     android:background="@color/colorAccent"
-    android:layout_below="@+id/toolbar">
+    android:layout_below="@+id/chat_list_toolbar"
+    android:id="@+id/chat_list_scrollview">
 
     <TableLayout
         android:layout_width="match_parent"

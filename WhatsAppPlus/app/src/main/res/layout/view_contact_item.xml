@@ -3,12 +3,13 @@
     android:orientation="horizontal" android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:paddingTop="10dp"
-    android:paddingBottom="10dp">
+    android:paddingBottom="10dp"
+    android:id="@+id/contact_item">
 
     <ImageView
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:id="@+id/chat_icon"
+        android:id="@+id/contact_item_icon"
         android:src="@drawable/whatsappplus_person_magda"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp" />
@@ -17,7 +18,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Maxi"
-        android:id="@+id/chat_name"
+        android:id="@+id/contact_item_name"
         android:textStyle="bold"
         android:textSize="15sp"
         android:textColor="@color/color_chatlist_chat_name"
@@ -28,7 +29,7 @@
     <CheckBox
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/checkBox"
+        android:id="@+id/contact_item_checkbox"
         android:checked="false"
         android:clickable="true"
         android:layout_gravity="center_vertical|right"

@@ -1,5 +1,6 @@
 package de.tum.whatsappplus;
 
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -45,13 +46,13 @@ public class ContactListActivity extends AppCompatActivity implements CompoundBu
         else
             Log.i(TAG, "Contact list activity started.");
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.contact_list_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("New group");
         getSupportActionBar().setSubtitle("0 selected");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        TableLayout table = (TableLayout) findViewById(R.id.contactList);
+        TableLayout table = (TableLayout) findViewById(R.id.contact_list_table);
         if (table != null) {
             table.setShowDividers(LinearLayout.SHOW_DIVIDER_MIDDLE);
 
@@ -59,10 +60,10 @@ public class ContactListActivity extends AppCompatActivity implements CompoundBu
                 Contact contact = Constants.contacts.get(contactId);
                 if (!contact.isGroupContact) {
                     View contact_item = getLayoutInflater().inflate(R.layout.view_contact_item, table, false);
-                    ((ImageView) contact_item.findViewById(R.id.chat_icon)).setImageResource(contact.imageID);
-                    ((TextView) contact_item.findViewById(R.id.chat_name)).setText(contact.name);
+                    ((ImageView) contact_item.findViewById(R.id.contact_item_icon)).setImageResource(contact.imageID);
+                    ((TextView) contact_item.findViewById(R.id.contact_item_name)).setText(contact.name);
                     List<String> preSelectedContactsList = Arrays.asList(preSelectedContacts);
-                    CheckBox checkBox = (CheckBox) contact_item.findViewById(R.id.checkBox);
+                    CheckBox checkBox = (CheckBox) contact_item.findViewById(R.id.contact_item_checkbox);
                     checkBox.setOnCheckedChangeListener(this);
                     checkBox.setTag(R.string.tag_checkbox_id, contact.name);
                     if (preSelectedContactsList.contains(contact.name)) {
@@ -74,6 +75,20 @@ public class ContactListActivity extends AppCompatActivity implements CompoundBu
             }
             loggingSelections = true;
         }
+
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.add(R.id.contact_list_root, new ClickInterceptorOverlayFragment(), "click_interceptor").commit();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Log.d(TAG, "onOptionsItemSelected " + item);
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -113,5 +128,12 @@ public class ContactListActivity extends AppCompatActivity implements CompoundBu
 
     public void notImplemented(View view) {
         Toast.makeText(this, "Not implemented", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onBackPressed() {
+        Log.i(Constants.TAG_CLICK_COUNTER, "Back pressed");
+        setResult(RESULT_CANCELED, getIntent().putExtra(Constants.RESULT_SELECTED_CONTACTS, getIntent().getStringArrayExtra(Constants.EXTRA_PRE_SELECTED_CONTACTS)));
+        finish();
     }
 }

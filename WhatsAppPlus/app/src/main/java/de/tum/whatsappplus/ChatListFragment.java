@@ -38,13 +38,13 @@ public class ChatListFragment extends Fragment{
                 Contact c = Constants.contacts.get(key);
                 if (c.chat == null || c.chat.isEmpty()) continue;
 
-                View chat1 = getActivity().getLayoutInflater().inflate(R.layout.view_chat_history_item, table, false);
-                ((ImageView) chat1.findViewById(R.id.chat_icon)).setImageResource(c.imageID);
-                ((TextView) chat1.findViewById(R.id.chat_name)).setText(c.name);
+                View chat1 = getActivity().getLayoutInflater().inflate(R.layout.view_chat_list_item, table, false);
+                ((ImageView) chat1.findViewById(R.id.chat_list_item_icon)).setImageResource(c.imageID);
+                ((TextView) chat1.findViewById(R.id.chat_list_item_text_name)).setText(c.name);
                 Message lastMessage = getLastMessage(c.chat);
                 if (lastMessage != null) {
-                    ((TextView) chat1.findViewById(R.id.chat_history_last)).setText(lastMessage.text);
-                    ((TextView) chat1.findViewById(R.id.chat_timestamp)).setText(lastMessage.timeStamp);
+                    ((TextView) chat1.findViewById(R.id.chat_list_item_text_lastmessage)).setText(lastMessage.text);
+                    ((TextView) chat1.findViewById(R.id.chat_list_item_timestamp)).setText(lastMessage.timeStamp);
                 }
                 chat1.setTag(R.string.tag_chat_id, c.name);
 

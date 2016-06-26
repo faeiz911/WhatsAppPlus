@@ -3,7 +3,8 @@
     android:orientation="horizontal" android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:longClickable="false"
-    android:background="@android:color/transparent">
+    android:background="@android:color/transparent"
+    android:id="@+id/chat_item">
 
     <LinearLayout
         android:orientation="vertical"
@@ -12,7 +13,7 @@
         android:background="@drawable/drawable_chat_item_background_system"
         android:layout_marginBottom="3dp"
         android:longClickable="false"
-        android:id="@+id/chat_message_content"
+        android:id="@+id/chat_item_content"
         android:layout_marginLeft="60dp"
         android:layout_marginRight="60dp"
         android:layout_marginTop="3dp"
@@ -25,7 +26,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Dies ist eine Systemnachricht. Auf sie kann nicht geclickt werden. Sie hat außerdem keinen Timestamp."
-            android:id="@+id/chat_message_text"
+            android:id="@+id/chat_item_content_text"
             android:textColor="@color/color_chat_system_message_text"
             android:gravity="center_horizontal"
             android:layout_margin="5dp"

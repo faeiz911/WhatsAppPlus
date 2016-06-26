@@ -1,5 +1,6 @@
 package de.tum.whatsappplus;
 
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
@@ -31,6 +32,7 @@ public class MessageSelectionActivity extends AppCompatActivity implements View.
     private String groupTitle;
     private int groupIcon;
     private boolean loggingSelections = false;
+    private boolean firstContactSelection = true;
 
     private TableLayout table;
 
@@ -54,8 +56,10 @@ public class MessageSelectionActivity extends AppCompatActivity implements View.
         final String[] selectedMessages = intent.getStringArrayExtra(Constants.EXTRA_PRE_SELECTED_MESSAGES);
         this.selectedMessages = new HashMap<>();
 
-        List<String> contacts = new ArrayList<>();
-        for (String contactId : selectedContacts) {
+        List<String> contactsWithMessages = new ArrayList<>();
+        for (int i = 0; i < selectedContacts.length; i++){
+            String contactId = selectedContacts[i];
+
             Contact contact = Constants.contacts.get(contactId);
 
             // if one of the selected contacts is also the contact we're creating the group chat from
@@ -77,23 +81,27 @@ public class MessageSelectionActivity extends AppCompatActivity implements View.
                 // put the list of selected messages in the map
                 this.selectedMessages.put(contactId, contactsSelectedMessages);
             if (contact.chat != null && !contact.chat.isEmpty()) {
-                contacts.add(contact.name);
+                contactsWithMessages.add(contact.name);
             }
         }
 
         setContentView(R.layout.activity_message_selection);
 
-        table = (TableLayout) findViewById(R.id.messageList);
+        table = (TableLayout) findViewById(R.id.message_selection_content_messages_table);
 
-        Spinner contactSpinner = (Spinner) findViewById(R.id.contactSpinner);
+        Spinner contactSpinner = (Spinner) findViewById(R.id.message_selection_content_contact_spinner);
         contactSpinner.getBackground().setColorFilter(getResources().getColor(android.R.color.white), PorterDuff.Mode.SRC_ATOP);
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.spinner_item, contacts.toArray(new String[contacts.size()]));
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.spinner_item, contactsWithMessages.toArray(new String[contactsWithMessages.size()]));
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        int originalContactIndex = adapter.getPosition(chatId);
         contactSpinner.setAdapter(adapter);
+        contactSpinner.setSelection(originalContactIndex);
         contactSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                if (!firstContactSelection)
+                    Log.i(Constants.TAG_CLICK_COUNTER, "Contact selected");
                 List<Message> contactsSelectedMessages;
                 if (table.getChildCount() > 0) {
                     String prevContact = (String) table.getTag(R.string.tag_chat_id);
@@ -124,19 +132,32 @@ public class MessageSelectionActivity extends AppCompatActivity implements View.
                         }
                     }
                 }
-                loggingSelections = true;
+                firstContactSelection = false;
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parentView) {}
         });
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.message_selection_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("New group");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.add(R.id.message_selection_root, new ClickInterceptorOverlayFragment(), "click_interceptor").commit();
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Log.d(TAG, "onOptionsItemSelected " + item);
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     public void onCreateClick(View view) {
         List<Message> groupMessages = getGroupMessages();
@@ -193,10 +214,10 @@ public class MessageSelectionActivity extends AppCompatActivity implements View.
 
     private View addNewChatMessage(Message message) {
         View chatItem = getLayoutInflater().inflate(R.layout.view_chat_item, table, false);
-        ((TextView) chatItem.findViewById(R.id.chat_message_text)).setText(message.text);
-        ((TextView) chatItem.findViewById(R.id.chat_message_timestamp)).setText(message.timeStamp);
+        ((TextView) chatItem.findViewById(R.id.chat_item_content_text)).setText(message.text);
+        ((TextView) chatItem.findViewById(R.id.chat_item_content_timestamp)).setText(message.timeStamp);
 
-        View chatMessageContent = chatItem.findViewById(R.id.chat_message_content);
+        View chatMessageContent = chatItem.findViewById(R.id.chat_item_content);
 
         TableLayout.LayoutParams chatItemLayoutParams = (TableLayout.LayoutParams) chatItem.getLayoutParams();
         chatItemLayoutParams.topMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, Constants.MESSAGE_MARGIN_TOP, getResources().getDisplayMetrics());
@@ -240,16 +261,16 @@ public class MessageSelectionActivity extends AppCompatActivity implements View.
     }
 
     private void selectSelfMessage(boolean toggle, View chatItem) {
-        View messageContent = chatItem.findViewById(R.id.chat_message_content);
+        View messageContent = chatItem.findViewById(R.id.chat_item_content);
         if (toggle) {
-            if (loggingSelections) Log.i(TAG, "Selected own message '" + ((TextView)messageContent.findViewById(R.id.chat_message_text)).getText() +
-                    "' from '" + ((TextView)messageContent.findViewById(R.id.chat_message_timestamp)).getText() + "'.");
+            if (loggingSelections) Log.i(TAG, "Selected own message '" + ((TextView)messageContent.findViewById(R.id.chat_item_content_text)).getText() +
+                    "' from '" + ((TextView)messageContent.findViewById(R.id.chat_item_content_timestamp)).getText() + "'.");
             messageContent.setBackground(getResources().getDrawable(R.drawable.drawable_chat_item_background_self_sel));
             chatItem.setBackgroundColor(getResources().getColor(R.color.color_chat_item_background_sel));
             chatItem.setTag(R.string.tag_selected, true);
         } else {
-            if (loggingSelections) Log.i(TAG, "Deselected own message '" + ((TextView)messageContent.findViewById(R.id.chat_message_text)).getText() +
-                    "' from '" + ((TextView)messageContent.findViewById(R.id.chat_message_timestamp)).getText() + "'.");
+            if (loggingSelections) Log.i(TAG, "Deselected own message '" + ((TextView)messageContent.findViewById(R.id.chat_item_content_text)).getText() +
+                    "' from '" + ((TextView)messageContent.findViewById(R.id.chat_item_content_timestamp)).getText() + "'.");
             messageContent.setBackground(getResources().getDrawable(R.drawable.drawable_chat_item_background_self));
             chatItem.setBackgroundColor(getResources().getColor(android.R.color.transparent));
             chatItem.setTag(R.string.tag_selected, false);
@@ -257,18 +278,18 @@ public class MessageSelectionActivity extends AppCompatActivity implements View.
     }
 
     private void selectOtherMessage(boolean toggle, View chatItem) {
-        View messageContent = chatItem.findViewById(R.id.chat_message_content);
+        View messageContent = chatItem.findViewById(R.id.chat_item_content);
         if (toggle) {
             if (loggingSelections) Log.i(TAG, "Selected " + table.getTag(R.string.tag_chat_id) + "'s message '"
-                    + ((TextView)messageContent.findViewById(R.id.chat_message_text)).getText() +
-                    "' from '" + ((TextView)messageContent.findViewById(R.id.chat_message_timestamp)).getText() + "'.");
+                    + ((TextView)messageContent.findViewById(R.id.chat_item_content_text)).getText() +
+                    "' from '" + ((TextView)messageContent.findViewById(R.id.chat_item_content_timestamp)).getText() + "'.");
             messageContent.setBackground(getResources().getDrawable(R.drawable.drawable_chat_item_background_other_sel));
             chatItem.setBackgroundColor(getResources().getColor(R.color.color_chat_item_background_sel));
             chatItem.setTag(R.string.tag_selected, true);
         } else {
             if (loggingSelections) Log.i(TAG, "Deselected " + table.getTag(R.string.tag_chat_id) + "'s message '"
-                    + ((TextView)messageContent.findViewById(R.id.chat_message_text)).getText() +
-                    "' from '" + ((TextView)messageContent.findViewById(R.id.chat_message_timestamp)).getText() + "'.");
+                    + ((TextView)messageContent.findViewById(R.id.chat_item_content_text)).getText() +
+                    "' from '" + ((TextView)messageContent.findViewById(R.id.chat_item_content_timestamp)).getText() + "'.");
             messageContent.setBackground(getResources().getDrawable(R.drawable.drawable_chat_item_background_other));
             chatItem.setBackgroundColor(getResources().getColor(android.R.color.transparent));
             chatItem.setTag(R.string.tag_selected, false);
@@ -281,5 +302,11 @@ public class MessageSelectionActivity extends AppCompatActivity implements View.
 
     public void notImplemented(View view) {
         Toast.makeText(this, "Not implemented", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onBackPressed() {
+        Log.i(Constants.TAG_CLICK_COUNTER, "Back pressed");
+        super.onBackPressed();
     }
 }

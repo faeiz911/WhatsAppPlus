@@ -1,21 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="de.tum.whatsappplus.ContactListActivity"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:id="@+id/contact_list_root">
 
-    <include layout="@layout/toolbar_contact_selection"/>
+    <include layout="@layout/toolbar_contact_list"
+        android:id="@+id/contact_list_toolbar" />
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_below="@+id/contact_list_toolbar"
+        android:id="@+id/contact_list_content">
         <TableLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/contactList"
+            android:id="@+id/contact_list_table"
             android:padding="16dp">
         </TableLayout>
     </ScrollView>
-</LinearLayout>
+</RelativeLayout>

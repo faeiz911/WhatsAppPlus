@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/toolbar"
+    android:id="@+id/contact_list_toolbar"
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize"
     android:background="?attr/colorPrimary"
@@ -13,39 +13,50 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="right"
-        android:background="@drawable/abc_action_bar_item_background_material">
+        android:layout_marginRight="25dp"
+        android:id="@+id/contact_list_toolbar_content">
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="35dp"
-            android:id="@+id/imageView"
             android:layout_gravity="center_vertical"
             android:src="@drawable/divider_group_creation_vertical"
-            android:layout_marginRight="15dp" />
+            android:layout_centerVertical="true"
+            android:id="@+id/contact_list_toolbar_content_separator" />
 
-        <ImageView
-            android:layout_width="28dp"
+        <ImageButton
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:id="@+id/toolbar_icon"
+            android:id="@+id/contact_list_toolbar_content_action"
             android:src="@drawable/ic_check_white_24dp1"
 
             android:layout_gravity="center_vertical"
-            android:onClick="onDoneClick" />
+            android:onClick="onDoneClick"
+            android:background="@drawable/drawable_toolbar_button_background"
+            android:paddingRight="50dp"
+            android:layout_marginRight="-42dp"
+            android:paddingLeft="10dp"
+            android:layout_marginLeft="10dp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:text="DONE"
-            android:id="@+id/toolbar_title"
+            android:id="@+id/contact_list_toolbar_content_actiondesc"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
             android:layout_gravity="center_vertical"
             android:textColor="@color/colorAccent"
-            android:layout_marginRight="30dp"
-            android:textSize="12dp"
+            android:textSize="12sp"
             android:textStyle="bold"
-            android:layout_marginLeft="5dp"
             android:onClick="onDoneClick"
-            android:gravity="center_vertical" />
+            android:layout_centerVertical="true"
+            android:gravity="center_vertical"
+            android:layout_alignParentRight="true"
+            android:paddingLeft="35dp"
+            android:layout_marginLeft="-40dp"
+            android:paddingRight="10dp"
+            android:background="@drawable/drawable_toolbar_button_background"
+            android:layout_marginRight="-10dp" />
     </LinearLayout>
 
 

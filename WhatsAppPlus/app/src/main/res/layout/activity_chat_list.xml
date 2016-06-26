@@ -9,12 +9,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         layout="@layout/toolbar_chat_list"
-        android:id="@+id/toolbar" />
+        android:id="@+id/chat_list_toolbar" />
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar"
+        android:layout_below="@+id/chat_list_toolbar"
         android:id="@+id/chat_list_content">
 
     </FrameLayout>

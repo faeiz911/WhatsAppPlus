@@ -1,5 +1,6 @@
 package de.tum.whatsappplus;
 
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
@@ -49,19 +50,22 @@ public class ContactSelectionActivity extends AppCompatActivity {
             contacts.add(fromChat);
 
         setContentView(R.layout.activity_contact_selection);
-        tableLayout = (TableLayout) findViewById(R.id.tableLayout);
-        EditText contactNameEditText = (EditText) findViewById(R.id.contactName);
+        tableLayout = (TableLayout) findViewById(R.id.contact_selection_content_table);
+        EditText contactNameEditText = (EditText) findViewById(R.id.contact_selection_content_input_edittext);
         contactNameEditText.getBackground().mutate().setColorFilter(getResources().getColor(R.color.color_add_button), PorterDuff.Mode.SRC_ATOP);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.contact_selection_toolbar);
         if (!PreferenceManager.getDefaultSharedPreferences(this).getBoolean(getString(R.string.pref_whatsapp_plus_features), false)) {
-            TextView textView = (TextView) toolbar.findViewById(R.id.toolbar_title);
+            TextView textView = (TextView) toolbar.findViewById(R.id.group_creation_toolbar_content_actiondesc);
             textView.setText("CREATE");
         }
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("New group");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.add(R.id.contact_selection_root, new ClickInterceptorOverlayFragment(), "click_interceptor").commit();
     }
 
     @Override
@@ -71,9 +75,9 @@ public class ContactSelectionActivity extends AppCompatActivity {
         tableLayout.removeAllViews();
         for(Contact c : contacts) {
             View contact_item = getLayoutInflater().inflate(R.layout.view_contact_remove, tableLayout, false);
-            ((ImageView) contact_item.findViewById(R.id.chat_icon)).setImageResource(c.imageID);
-            ((TextView) contact_item.findViewById(R.id.chat_name)).setText(c.name);
-            ImageButton removeButton = (ImageButton) contact_item.findViewById(R.id.removeContact);
+            ((ImageView) contact_item.findViewById(R.id.contact_item_icon)).setImageResource(c.imageID);
+            ((TextView) contact_item.findViewById(R.id.contact_item_name)).setText(c.name);
+            ImageButton removeButton = (ImageButton) contact_item.findViewById(R.id.contact_item_remove);
             removeButton.setTag(R.string.tag_remove_contact, c.name);
             tableLayout.addView(contact_item);
         }
@@ -83,8 +87,8 @@ public class ContactSelectionActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         List<Contact> newContacts = new ArrayList<>();
-        String[] selectedContacts = data.getStringArrayExtra(Constants.RESULT_SELECTED_CONTACTS);
-        if (requestCode == SELECT_CONTACTS_REQUEST_CODE && resultCode == RESULT_OK) {
+        if (requestCode == SELECT_CONTACTS_REQUEST_CODE && (resultCode == RESULT_OK || resultCode == RESULT_CANCELED)) {
+            String[] selectedContacts = data.getStringArrayExtra(Constants.RESULT_SELECTED_CONTACTS);
             String selectedContactsConcatString = "";
             for (String key : Constants.contacts.keySet()) {
                 Contact c = Constants.contacts.get(key);
@@ -177,5 +181,11 @@ public class ContactSelectionActivity extends AppCompatActivity {
 
     public void notImplemented(View view) {
         Toast.makeText(this, "Not implemented", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onBackPressed() {
+        Log.i(Constants.TAG_CLICK_COUNTER, "Back pressed");
+        super.onBackPressed();
     }
 }

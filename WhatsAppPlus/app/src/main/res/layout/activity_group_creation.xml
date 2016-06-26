@@ -1,43 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".GroupCreationActivity"
     android:orientation="vertical"
-    android:background="@android:color/white">
+    android:background="@android:color/white"
+    android:id="@+id/group_creation_root">
 
-    <include layout="@layout/toolbar_group_creation"/>
+    <include layout="@layout/toolbar_group_creation"
+        android:id="@+id/group_creation_toolbar" />
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="16dp">
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="16dp"
+        android:layout_below="@+id/group_creation_toolbar"
+        android:id="@+id/group_creation_content"
+        android:layout_marginTop="16dp">
 
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:id="@+id/group_creation_content_icondesc">
 
             <ImageButton
                 android:layout_width="100dp"
                 android:layout_height="100dp"
-                android:id="@+id/imageButton"
                 android:src="@drawable/whatsappplus_icon_group"
                 android:contentDescription="add a group image"
-                android:contextClickable="true"
                 android:scaleType="fitCenter"
                 android:background="@android:color/transparent"
                 android:hapticFeedbackEnabled="false"
-                android:onClick="notImplemented" />
+                android:onClick="notImplemented"
+                android:id="@+id/group_creation_content_icon" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Please provide group subject and optional group icon"
-                android:id="@+id/descriptionView"
+                android:id="@+id/group_creation_content_desc"
                 android:background="@android:color/transparent"
                 android:paddingTop="10dp"
                 android:paddingLeft="10dp"
@@ -47,9 +54,9 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/groupTitle"
+            android:id="@+id/group_creation_content_input"
             android:hint="Type group subject here..."
             android:inputType="text" />
     </LinearLayout>
 
-</LinearLayout>
+</RelativeLayout>

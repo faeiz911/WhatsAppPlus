@@ -3,27 +3,23 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
         <item
-            android:id="@+id/action_search"
             android:icon="@drawable/ic_search_white_24dp"
             android:title="@string/action_search"
             android:onClick="notImplemented"
             app:showAsAction="ifRoom"/>
 
         <item
-            android:id="@+id/action_newchat"
             android:icon="@drawable/ic_comment_white_24dp"
             android:title="@string/action_newmessage"
             android:onClick="notImplemented"
             app:showAsAction="ifRoom"/>
 
         <item
-            android:id="@+id/action_newgroup"
             android:title="@string/action_newgroup"
             android:onClick="onNewGroupClick"
             app:showAsAction="never"/>
 
         <item
-            android:id="@+id/action_settings"
             android:title="@string/action_settings"
             android:onClick="onSettingsClick"
             app:showAsAction="never"/>

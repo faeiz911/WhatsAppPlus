@@ -1,34 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="de.tum.whatsappplus.ContactSelectionActivity"
     android:orientation="vertical"
-    android:background="@android:color/white">
+    android:background="@android:color/white"
+    android:id="@+id/contact_selection_root">
 
-    <include layout="@layout/toolbar_group_creation"/>
+    <include layout="@layout/toolbar_group_creation"
+        android:id="@+id/contact_selection_toolbar" />
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="16dp">
+        android:padding="16dp"
+        android:layout_below="@+id/contact_selection_toolbar"
+        android:id="@+id/contact_selection_content">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/contact_selection_text"
-            android:id="@+id/textView" />
+            android:id="@+id/contact_selection_content_description" />
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:id="@+id/contact_selection_content_input">
 
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/contactName"
+                android:id="@+id/contact_selection_content_input_edittext"
                 android:hint="@string/contact_selection_hint"
                 android:enabled="false"
                 android:onClick="notImplemented" />
@@ -36,7 +41,6 @@
             <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/addContacts"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentStart="false"
                 android:src="@android:drawable/ic_input_add"
@@ -44,13 +48,14 @@
                 android:contentDescription="@string/description_add_contact_button"
                 android:baselineAlignBottom="false"
                 android:onClick="onAddContactsClick"
-                android:tint="@color/color_add_button" />
+                android:tint="@color/color_add_button"
+                android:id="@+id/contact_selection_content_input_add" />
         </RelativeLayout>
 
         <TableLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/tableLayout"/>
+            android:id="@+id/contact_selection_content_table"/>
     </LinearLayout>
 
-</LinearLayout>
+</RelativeLayout>
