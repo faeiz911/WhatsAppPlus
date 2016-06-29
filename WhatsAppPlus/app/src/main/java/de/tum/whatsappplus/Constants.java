@@ -62,7 +62,7 @@ public class Constants {
         messages = new ArrayList<>(Arrays.asList(new Message(Constants.AUTHOR_SELF, "Was machst du heute Abend?", "16:24"),
                 new Message("Magda", "Ich weis noch nicht. Wollte eigentlich weg gehen!", "16:27"),
                 new Message(Constants.AUTHOR_SELF, "Wir wollen heute Nacht noch ins Irish Pub", "16:30")));
-        contacts.put("Magda", new Contact("Magda", R.drawable.whatsappplus_person_magda, new ArrayList<Message>(), false));
+        contacts.put("Magda", new Contact("Magda", R.drawable.whatsappplus_person_magda, messages, false));
         messages = new ArrayList<>(Arrays.asList(new Message("Manuel", "Schaust du das Spiel morgen?", "14:43"),
                 new Message(Constants.AUTHOR_SELF, "Michael und ich wollte morgen vorher noch grillen und das Spiel im Anschluss anschauen", "14:52"),
                 new Message("Manuel", "Da wäre ich dabei. Wann gehts los?", "15:01"),
@@ -71,18 +71,18 @@ public class Constants {
         messages = new ArrayList<>(Arrays.asList(new Message("Monika", "Game of Thrones am Montag?", "12:51"),
                 new Message(Constants.AUTHOR_SELF, "Klar. Wieder um 20 Uhr?", "13:05"),
                 new Message("Monika", "Jup", "13:10")));
-        contacts.put("Monika", new Contact("Monika", R.drawable.whatsappplus_person_monika, new ArrayList<Message>(), false));
+        contacts.put("Monika", new Contact("Monika", R.drawable.whatsappplus_person_monika, messages, false));
         messages = new ArrayList<>(Arrays.asList(new Message("Miriam", "Ich hab die große Liebe meines Lebens gefunden!", "10:42"),
                 new Message(Constants.AUTHOR_SELF, "Wer isses?", "10:42"),
                 new Message("Miriam", "Steaks", "10:43"),
                 new Message(Constants.AUTHOR_SELF, "Dein ernst?", "10:43")));
-        contacts.put("Miriam", new Contact("Miriam", R.drawable.whatsappplus_person_miriam, new ArrayList<Message>(), false));
+        contacts.put("Miriam", new Contact("Miriam", R.drawable.whatsappplus_person_miriam, messages, false));
         messages = new ArrayList<>(Arrays.asList(new Message("Moritz", "Bin gleich da. Nur noch den drecks Berg hoch -.-'", "12:08"),
                 new Message("Moritz", "Warum ist hier in Snackautomat... Auf dem Bürgersteig?!?!", "12:09"),
                 new Message("Moritz", "Wtf??", "12:09"),
                 new Message(Constants.AUTHOR_SELF, "Der steht da schon lange :D", "12:10"),
                 new Message("Moritz", "Für alle denen er Berg zu anstrenged ist? Erstmal n Engergydrink und ein Snickers?", "12:10")));
-        contacts.put("Moritz", new Contact("Moritz", R.drawable.whatsappplus_person_moritz, new ArrayList<Message>(), false));
+        contacts.put("Moritz", new Contact("Moritz", R.drawable.whatsappplus_person_moritz, messages, false));
     }
 
     public static String getCurrentTimeStamp() {
